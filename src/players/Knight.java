@@ -6,6 +6,10 @@ public class Knight extends Heroes {
         super(hitPoints, bonusHitPoints, experiencePoints, level, letter);
     }
 
+    public final void accept(Heroes h) {
+        h.fight(this);
+    }
+
     private class Modifiers {
         public static final double DAMAGE1 = 200;
         public static final double DAMAGE2 = 100;
@@ -44,15 +48,19 @@ public class Knight extends Heroes {
         h.setHitPoints(h.getHitPoints() - result );
     }
 
-    public void fight (Heroes hero) {
-        if(hero instanceof Pyromancer) {
-            newScore(hero, Modifiers.KVSP1, Modifiers.KVSP2);
-        } else if(hero instanceof Wizard) {
-            newScore(hero, Modifiers.KVSW1, Modifiers.KVSW2);
-        } else if(hero instanceof Rogue) {
-            newScore(hero, Modifiers.KVSR1, Modifiers.KVSR2);
-        } else {
-            newScore(hero, Modifiers.KVSK1, Modifiers.KVSK2);
-        }
+    public final void fight(Pyromancer hero){
+        newScore(hero, Modifiers.KVSP1, Modifiers.KVSP2);
+    }
+
+    public final void fight (Wizard hero){
+        newScore(hero, Modifiers.KVSW1, 0);
+    }
+
+    public final void fight (Knight hero){
+        newScore(hero, Modifiers.KVSK1, Modifiers.KVSK2);
+    }
+
+    public final void fight (Rogue hero){
+        newScore(hero, Modifiers.KVSR1, Modifiers.KVSR2);
     }
 }

@@ -16,6 +16,15 @@ public class Heroes {
         this.experiencePoints = experiencePoints;
     }
 
+    public void accept(Heroes h) {
+        h.fight(this);
+    }
+    public void fight(Knight h) {}
+    public void fight(Pyromancer h) {}
+    public void fight(Rogue h) {}
+    public void fight(Wizard h) {}
+    public void fight(Heroes h) {}
+
     public int totalDamage(){
         return 0;
     }

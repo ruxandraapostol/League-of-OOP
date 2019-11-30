@@ -2,9 +2,14 @@ package players;
 
 public class Rogue extends Heroes {
     private int nr = 0;
+    private String advantage = null;
     public Rogue(final int hitPoints, final int bonusHitPoints,
                       final int experiencePoints, final int level, final String letter){
         super(hitPoints, bonusHitPoints, experiencePoints, level, letter);
+    }
+
+    public final void accept(Heroes h) {
+        h.fight(this);
     }
 
     private class Modifiers {
@@ -24,17 +29,21 @@ public class Rogue extends Heroes {
         public static final double RVSW2 = 1.25;
     }
 
+    public void setAdvantage(String advantage) {
+        this.advantage = advantage;
+    }
+
     @Override
     public final int totalDamage(){
         return (int) Math.round(Modifiers.DAMAGE1 + Modifiers.DAMAGE1BONUS * this.getLevel()) +
                 (int) Math.round(Modifiers.DAMAGE2 + Modifiers.DAMAGE2BONUS * this.getLevel());
     }
 
-    public final void newScore(final Heroes h, final double
-            constant1, final double constant, final String letter) {
+    public final void newScore(final Heroes h,
+              final double constant1, final double constant) {
         nr++;
         double result = 1;
-        if(letter == "W"){
+        if(this.advantage == "W"){
             result = 1.5;
             if (nr == 2){
                 result = 3;
@@ -50,15 +59,20 @@ public class Rogue extends Heroes {
         h.setHitPoints(h.getHitPoints() - (int) result );
     }
 
-    public void fight (Heroes hero, String letter) {
-        if(hero instanceof Pyromancer) {
-            newScore(hero, Modifiers.RVSP1, Modifiers.RVSP2, letter);
-        } else if(hero instanceof Wizard) {
-            newScore(hero, Modifiers.RVSW1, Modifiers.RVSW2, letter);
-        } else if(hero instanceof Rogue) {
-            newScore(hero, Modifiers.RVSR1, Modifiers.RVSR2, letter);
-        } else {
-            newScore(hero, Modifiers.RVSK1, Modifiers.RVSK2, letter);
-        }
+    public final void fight(Pyromancer hero){
+        newScore(hero, Modifiers.RVSP1, Modifiers.RVSP2);
     }
+
+    public final void fight (Wizard hero){
+        newScore(hero, Modifiers.RVSW1, Modifiers.RVSW2);
+    }
+
+    public final void fight (Knight hero){
+        newScore(hero, Modifiers.RVSK1, Modifiers.RVSK2);
+    }
+
+    public final void fight (Rogue hero){
+        newScore(hero, Modifiers.RVSR1, Modifiers.RVSR2);
+    }
+
 }

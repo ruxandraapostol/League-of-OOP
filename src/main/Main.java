@@ -13,12 +13,8 @@ public class Main {
 
         Heroes h1 = HeroesFactory.getInstance().getHeroesByLetter("W");
         Heroes h2 = HeroesFactory.getInstance().getHeroesByLetter("R");
-        if(h1 instanceof Wizard) {
-            ((Wizard) h1).fight(h2);
-        }
-        if(h2 instanceof Rogue) {
-            ((Rogue) h2).fight(h1, "L");
-        }
+        h2.accept(h1);
+        h1.accept(h2);
         System.out.println("W: " + h1.getHitPoints());
         System.out.println("R: " + h2.getHitPoints());
     }

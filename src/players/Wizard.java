@@ -6,6 +6,11 @@ public class Wizard extends Heroes {
         super(hitPoints, bonusHitPoints, experiencePoints, level, letter);
     }
 
+    public final void accept(Heroes h) {
+        System.out.println("DAA");
+        h.fight(this);
+    }
+
     private class Modifiers {
         public static final double DAMAGE1 = 0.2;
         public static final double DAMAGE2 = 0.35;
@@ -23,7 +28,7 @@ public class Wizard extends Heroes {
 
     }
 
-    public void newScore1(final Heroes h, final double constant1, final double constant2 ) {
+    public void newScore(final Heroes h, final double constant1, final double constant2 ) {
         int result = (int) Math.round(constant1 * (Modifiers.DAMAGE1 + Modifiers.DAMAGE1BONUS
                 * this.getLevel()) * (Math.min(h.getHitPoints(), 0.3 *
                 HeroesFactory.getInstance().getHeroesByLetter(h.getLetter()).getHitPoints()))) ;
@@ -37,16 +42,20 @@ public class Wizard extends Heroes {
 
         h.setHitPoints(h.getHitPoints() - result);
     }
-    
-    public void fight (Heroes hero) {
-        if(hero instanceof Pyromancer) {
-            newScore1(hero, Modifiers.WVSP1, Modifiers.WVSP2);
-        } else if(hero instanceof Wizard) {
-            newScore1(hero, Modifiers.WVSW1, 0);
-        } else if(hero instanceof Rogue) {
-            newScore1(hero, Modifiers.WVSR1, Modifiers.WVSR2);
-        } else {
-            newScore1(hero, Modifiers.WVSK1, Modifiers.WVSK2);
-        }
+
+    public final void fight(Pyromancer hero){
+        newScore(hero, Modifiers.WVSP1, Modifiers.WVSP2);
+    }
+
+    public final void fight (Wizard hero){
+        newScore(hero, Modifiers.WVSW1, 0);
+    }
+
+    public final void fight (Knight hero){
+        newScore(hero, Modifiers.WVSK1, Modifiers.WVSK2);
+    }
+
+    public final void fight (Rogue hero){
+        newScore(hero, Modifiers.WVSR1, Modifiers.WVSR2);
     }
 }
