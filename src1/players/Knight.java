@@ -30,12 +30,16 @@ public class Knight extends Heroes {
     }
 
     @Override
-    public final int totalDamage(){
-        return (int) Math.round(Modifiers.DAMAGE1 + Modifiers.DAMAGE1BONUS * this.getLevel()) +
-                (int) Math.round(Modifiers.DAMAGE2 + Modifiers.DAMAGE2BONUS * this.getLevel());
+    public final int totalDamage( String s){
+        float mod = 1;
+        if (s.equals("L")) {
+            mod = Modifiers.LAND;
+        }
+        return (int) Math.round((Modifiers.DAMAGE1 + Modifiers.DAMAGE1BONUS * this.getLevel()) * mod) +
+                (int) Math.round((Modifiers.DAMAGE2 + Modifiers.DAMAGE2BONUS * this.getLevel())*mod);
     }
 
-    public void newScore( Heroes h, float constant1, float constant2, String s) {
+    public void newScore( Heroes h, float execute, float slam, String s) {
         float conditon = (float) (0.2 + 0.01 * this.getLevel()) * HeroesFactory.
                 getInstance().getHeroesByLetter(h.getLetter()).getHitPoints();
         if ( h.getHitPoints() < conditon && this.getLevel() <= 20) {
@@ -45,10 +49,10 @@ public class Knight extends Heroes {
             if (s.equals("L")) {
                 mod = Modifiers.LAND;
             }
-            int result = (int) Math.round(mod * constant1 * (Modifiers.DAMAGE1 + Modifiers.DAMAGE1BONUS
-                    * this.getLevel()));
-            result += (int) Math.round(mod * constant2 * (Modifiers.DAMAGE2 + Modifiers.DAMAGE2BONUS
-                    * this.getLevel()));
+            int result = (int) Math.round((Modifiers.DAMAGE1 + Modifiers.DAMAGE1BONUS
+                    * this.getLevel()) * execute * mod);
+            result += (int) Math.round((Modifiers.DAMAGE2 + Modifiers.DAMAGE2BONUS
+                    * this.getLevel()) * slam * mod);
             h.setHitPoints(h.getHitPoints() - result);
         }
 

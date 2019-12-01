@@ -28,7 +28,7 @@ public class Heroes {
     public void fight(Wizard h, String s) {}
     public void fight(Heroes h, String s) {}
 
-    public int totalDamage(){
+    public int totalDamage( String s){
         return 0;
     }
 
@@ -55,6 +55,10 @@ public class Heroes {
     public final int getLevel() { return level; }
 
     public final int getId() { return id; }
+
+    public final int getBonusHitPoints() {
+        return bonusHitPoints;
+    }
 
     public void setId(int id) {
         this.id = id;

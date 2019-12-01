@@ -27,21 +27,25 @@ public class Pyromancer extends Heroes{
     }
 
     @Override
-    public final int totalDamage(){
-        return (int) Math.round(Modifiers.DAMAGE1 + Modifiers.DAMAGE1BONUS * this.getLevel()) +
-                (int) Math.round(Modifiers.DAMAGE2 + Modifiers.DAMAGE2BONUS * this.getLevel());
-    }
-
-    public void newScore( Heroes h, float constant, String s) {
+    public final int totalDamage(String s){
         float mod = 1;
         if (s.equals("V")) {
             mod = Modifiers.LAND;
         }
-        h.setDot1(Modifiers.DOT + Modifiers.BONUS * this.getLevel(), Modifiers.INDEX);
-        int result = (int) Math.round(mod * constant * (Modifiers.DAMAGE1 + Modifiers.DAMAGE1BONUS
-                * this.getLevel())) ;
-        result += (int) Math.round(mod * constant * (Modifiers.DAMAGE2 + Modifiers.DAMAGE2BONUS
-                * this.getLevel())) ;
+        return (int) Math.round((Modifiers.DAMAGE1 + Modifiers.DAMAGE1BONUS * this.getLevel()) * mod) +
+                (int) Math.round((Modifiers.DAMAGE2 + Modifiers.DAMAGE2BONUS * this.getLevel()) * mod);
+    }
+
+    public void newScore( Heroes h, float ability, String s) {
+        float mod = 1;
+        if (s.equals("V")) {
+            mod = Modifiers.LAND;
+        }
+        h.setDot1(Math.round((Modifiers.DOT + Modifiers.BONUS * this.getLevel()) * mod * ability), Modifiers.INDEX);
+        int result = (int) Math.round((Modifiers.DAMAGE1 + Modifiers.DAMAGE1BONUS
+                * this.getLevel())*ability*mod) ;
+        result += (int) Math.round((Modifiers.DAMAGE2 + Modifiers.DAMAGE2BONUS
+                * this.getLevel()) * ability * mod) ;
         h.setHitPoints(h.getHitPoints() - result);
         if (h.getHitPoints() <= 0){
             h.setHitPoints(0);

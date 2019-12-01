@@ -13,10 +13,10 @@ public class Rogue extends Heroes {
     }
 
     private class Modifiers {
-        public static final float DAMAGE1 = 200;
-        public static final float DAMAGE2 = 40;
-        public static final float DAMAGE1BONUS = 20;
-        public static final float DAMAGE2BONUS = 10;
+        public static final float DAMAGE1 = 200f;
+        public static final float DAMAGE2 = 40f;
+        public static final float DAMAGE1BONUS = 20f;
+        public static final float DAMAGE2BONUS = 10f;
         public static final int DOT = 40;
         public static final int BONUS = 10;
         public static final int INDEX = 3;
@@ -38,35 +38,39 @@ public class Rogue extends Heroes {
     }
 
     @Override
-    public final int totalDamage(){
-        return (int) Math.round(Modifiers.DAMAGE1 + Modifiers.DAMAGE1BONUS * this.getLevel()) +
-                (int) Math.round(Modifiers.DAMAGE2 + Modifiers.DAMAGE2BONUS * this.getLevel());
+    public final int totalDamage(String s){
+        float mod = 1;
+        if (s.equals("W")) {
+            mod = Modifiers.LAND;
+        }
+        System.out.println(Math.round((Modifiers.DAMAGE1 + Modifiers.DAMAGE1BONUS * this.getLevel()) * mod));
+        return (int) Math.round((Modifiers.DAMAGE1 + Modifiers.DAMAGE1BONUS * this.getLevel()) * mod) +
+                (int) Math.round((Modifiers.DAMAGE2 + Modifiers.DAMAGE2BONUS * this.getLevel()) * mod);
     }
 
     public final void newScore(final Heroes h,
-              final float constant1, final float constant, String s) {
+              final float backstab, final float paralysis, String s) {
         nr++;
         float mod = 1;
         float criticalHit = 1;
         if (s.equals("W")) {
             mod = Modifiers.LAND;
-            h.setDot1(Math.round((Modifiers.DOT + Modifiers.BONUS * this.getLevel()) * mod * constant) , 2 * Modifiers.INDEX);
+            h.setDot1(Math.round((Modifiers.DOT + Modifiers.BONUS * this.getLevel()) * mod * paralysis) , 2 * Modifiers.INDEX);
             if (nr == 3){
                 criticalHit = 1.5f;
                 nr = 0;
             }
         } else {
-            h.setDot1(Modifiers.DOT + Modifiers.BONUS * this.getLevel(), Modifiers.INDEX);
+            h.setDot1(Math.round((Modifiers.DOT + Modifiers.BONUS * this.getLevel()) * mod * paralysis) , Modifiers.INDEX);
             if(nr == 3) {
                 nr = 0;
             }
         }
-        int result = (int) Math.round(criticalHit* mod * constant1
-                * (Modifiers.DAMAGE1 + Modifiers.DAMAGE1BONUS
-                * this.getLevel()));
-        result += (int) Math.round(mod * constant * (Modifiers.DAMAGE2 + Modifiers.DAMAGE2BONUS
-                * this.getLevel())) ;
-        h.setHitPoints(h.getHitPoints() - (int) result );
+        int result1 = Math.round((Modifiers.DAMAGE1 + Modifiers.DAMAGE1BONUS
+                * this.getLevel()) * backstab * mod * criticalHit);
+        int result2 = Math.round((Modifiers.DAMAGE2 + Modifiers.DAMAGE2BONUS
+                * this.getLevel()) * paralysis * mod) ;
+        h.setHitPoints(h.getHitPoints() - result1 - result2 );
 
         if (h.getHitPoints() <= 0){
             h.setHitPoints(0);

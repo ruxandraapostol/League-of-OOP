@@ -27,21 +27,28 @@ public class Wizard extends Heroes {
         public static final float PROC = 0.3f;
     }
 
-    public void newScore(final Heroes h, final float constant1, final float constant2, String s ) {
+    public void newScore(final Heroes h, final float drain, final float deflect, String s ) {
         float mod = 1;
         if (s.equals("D")) {
             mod = Modifiers.LAND;
         }
-        int result = (int) Math.round(mod * constant1 * (Modifiers.DAMAGE1 + Modifiers.DAMAGE1BONUS
-                * this.getLevel()) * (Math.min(h.getHitPoints(), Modifiers.COND *
-                HeroesFactory.getInstance().getHeroesByLetter(h.getLetter()).getHitPoints()))) ;
+        int result = (int) Math.round((Modifiers.DAMAGE1 + Modifiers.DAMAGE1BONUS
+                * this.getLevel()) * (Math.min(h.getHitPoints(), Modifiers.PROC *
+                (HeroesFactory.getInstance().getHeroesByLetter(h.getLetter()).getHitPoints() +
+                        HeroesFactory.getInstance().getHeroesByLetter(h.getLetter()).
+                        getBonusHitPoints() * h.getLevel() ))) * drain * mod ) ;
+
+        System.out.println(result);
+
         if( h instanceof Pyromancer || h instanceof Knight || h instanceof Rogue){
             float procent = Modifiers.DAMAGE2 + Modifiers.DAMAGE2BONUS * this.getLevel();
             if ( procent > Modifiers.COND){
                 procent = Modifiers.COND;
             }
-            result += (int) Math.round(mod * constant2 * procent * h.totalDamage());
+            System.out.println("atentiune atentiune " + h.totalDamage(s));
+            result += (int) Math.round(mod * deflect * procent * h.totalDamage(s));
         }
+        System.out.println(result);
         h.setHitPoints(h.getHitPoints() - result);
         if (h.getHitPoints() <= 0){
             h.setHitPoints(0);

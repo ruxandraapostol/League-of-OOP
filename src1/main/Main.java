@@ -20,24 +20,32 @@ public final class Main {
             for (int j = 0; j < gameInput.getP(); j++) {
                 playersMap.get(j).move(gameInput.getMove().get(i).charAt(j));
             }
+
+            for (Map player1 : playersMap) {
+                player1.getHero().doT();
+            }
+
             for (Map player1 : playersMap){
                 boolean ok = true;
-                if(player1.getHero().getHitPoints() == 0){
+                if(player1.getHero().getHitPoints() <= 0){
                     continue;
                 }
                 String pos = "" + gameInput.getMap().get(player1.getLine()).charAt(player1.getColumn());
                 for (Map player2 : playersMap){
-                    player2.getHero().doT();
+                    if(player2.getHero().getHitPoints() <= 0) {
+                        continue;
+                    }
                     if(player1.getHero().getId() != player2.getHero().getId()
-                            && player2.getHero().getHitPoints()!=0 &&
+                            && player2.getHero().getHitPoints() > 0 &&
+                            player1.getHero().getHitPoints() > 0 &&
                             player1.getColumn() == player2.getColumn() &&
                             player1.getLine() == player2.getLine()){
+
                         player1.getHero().accept(player2.getHero(), pos);
                         player2.getHero().accept(player1.getHero(), pos);
                         ok = false;
                         break;
-                    }
-                    if(player1.getHero().getId() == player2.getHero().getId()
+                    } else if(player1.getHero().getId() == player2.getHero().getId()
                             && player2.getHero().getHitPoints()==0){
                         ok = false;
                     }
@@ -50,7 +58,7 @@ public final class Main {
             System.out.println("-------------------------------------");
             for(Map player : playersMap){
                 System.out.print(player.getHero().getLetter()+ " ");
-                if(player.getHero().getHitPoints() == 0){
+                if(player.getHero().getHitPoints() <= 0){
                     System.out.println("dead");
                 } else {
                     System.out.println(player.getHero().getLevel() + " "
@@ -64,7 +72,7 @@ public final class Main {
         String s = "";
         for(Map player : playersMap) {
             s += player.getHero().getLetter() + " ";
-            if (player.getHero().getHitPoints() == 0) {
+            if (player.getHero().getHitPoints() <= 0) {
                 s += "dead";
             } else {
                 s += player.getHero().getLevel() + " " +
