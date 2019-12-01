@@ -69,10 +69,13 @@ public class Heroes {
         this.experiencePoints += Math.max(0, x);
         if (this.experiencePoints >= 250 + 50 * this.level){
             //noul nivel
-            int newLevel = (this.experiencePoints - 250) / 50 + 1;
+            this.level = (this.experiencePoints - 250) / 50 + 1;
+            System.out.println("punctele bonus sunt :" + bonusHitPoints);
+            System.out.println("punctele standard sunt:" + HeroesFactory.getInstance().getHeroesByLetter
+                    (this.getLetter()).getHitPoints() );
             //puntctele hp se redau
-            setHitPoints(this.hitPoints + bonusHitPoints * (newLevel - this.level));
-            this.level = newLevel;
+            setHitPoints(HeroesFactory.getInstance().getHeroesByLetter
+                    (this.getLetter()).getHitPoints() + bonusHitPoints * this.level);
         }
     }
 
@@ -83,6 +86,4 @@ public class Heroes {
     public void setHitPoints(final int hitPoints){
         this.hitPoints = hitPoints;
     }
-
-    public void setBonusHitPoints(int bhp) { this.bonusHitPoints = bhp; }
 }

@@ -40,6 +40,7 @@ public class Wizard extends Heroes {
                         HeroesFactory.getInstance().getHeroesByLetter(h.getLetter()).
                         getBonusHitPoints() * h.getLevel() ))) * drain * mod ) ;
 
+        System.out.println("pentru prima abilitate scad" + result);
         float criticalHit = 1;
         float result2 = 0;
         if( h instanceof Pyromancer || h instanceof Knight || h instanceof Rogue){
@@ -56,15 +57,11 @@ public class Wizard extends Heroes {
             }
             result2 = (int) Math.round(mod * deflect * procent * ( h.totalDamage(s) + result2) );
         }
+        System.out.println("pentru a doua abilitate scad" + result2);
         if(nr == 3){
             nr = 0;
         }
-
         h.setHitPoints(h.getHitPoints() - result - (int) result2);
-        if (h.getHitPoints() <= 0){
-            h.setHitPoints(0);
-            this.setExperiencePoints(h.getLevel());
-        }
     }
 
     public final void fight(Pyromancer hero, String s){

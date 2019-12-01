@@ -47,10 +47,6 @@ public class Pyromancer extends Heroes{
         result += (int) Math.round((Modifiers.DAMAGE2 + Modifiers.DAMAGE2BONUS
                 * this.getLevel()) * ability * mod) ;
         h.setHitPoints(h.getHitPoints() - result);
-        if (h.getHitPoints() <= 0){
-            h.setHitPoints(0);
-            this.setExperiencePoints(h.getLevel());
-        }
     }
 
     public final void fight(Pyromancer hero, String s){

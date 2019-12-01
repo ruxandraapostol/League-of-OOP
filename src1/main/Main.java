@@ -30,11 +30,16 @@ public final class Main {
                 if(player1.getHero().getHitPoints() <= 0){
                     continue;
                 }
-                if(player1.getLine() > gameInput.getN() || player1.getColumn() > gameInput.getM()){
+                if(player1.getLine() >= gameInput.getN() || player1.getColumn() >= gameInput.getM()
+                    || player1.getLine() < 0 || player1.getColumn() < 0){
                     continue;
                 }
+
                 String pos = "" + gameInput.getMap().get(player1.getLine()).charAt(player1.getColumn());
                 for (Map player2 : playersMap){
+                    if(player1.getHero().getId() <= player2.getHero().getId()){
+                        continue;
+                    }
                     if(player2.getHero().getHitPoints() <= 0) {
                         continue;
                     }
@@ -43,18 +48,18 @@ public final class Main {
                             player1.getHero().getHitPoints() > 0 &&
                             player1.getColumn() == player2.getColumn() &&
                             player1.getLine() == player2.getLine()){
-
+                        System.out.println("se bat ");
                         player1.getHero().accept(player2.getHero(), pos);
                         player2.getHero().accept(player1.getHero(), pos);
-                        ok = false;
+                        if (player1.getHero().getHitPoints() <= 0){
+                            player1.getHero().setHitPoints(0);
+                            player2.getHero().setExperiencePoints(player1.getHero().getLevel());
+                        } else if (player2.getHero().getHitPoints() <= 0){
+                            player2.getHero().setHitPoints(0);
+                            player1.getHero().setExperiencePoints(player2.getHero().getLevel());
+                        }
                         break;
-                    } else if(player1.getHero().getId() == player2.getHero().getId()
-                            && player2.getHero().getHitPoints()==0){
-                        ok = false;
                     }
-                }
-                if (!ok) {
-                    break;
                 }
             }
             System.out.println("Runda " + i);
@@ -65,8 +70,8 @@ public final class Main {
                     System.out.println("dead");
                 } else {
                     System.out.println(player.getHero().getLevel() + " "
-                            + player.getHero().getHitPoints() + " "
                             + player.getHero().getExperiencePoints() + " "
+                            + player.getHero().getHitPoints() + " "
                             + player.getLine() + " " + player.getColumn());
                 }
             }

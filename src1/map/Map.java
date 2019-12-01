@@ -33,9 +33,9 @@ public class Map {
         } else if(move == 'R') {
             column ++;
         } else if(move == 'U') {
-            line ++;
-        } else if(move == 'D') {
             line --;
+        } else if(move == 'D') {
+            line ++;
         }
     }
 

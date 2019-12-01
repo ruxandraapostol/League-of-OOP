@@ -78,10 +78,6 @@ public class Rogue extends Heroes {
                 * this.getLevel()) * paralysis * mod) ;
         h.setHitPoints(h.getHitPoints() - result1 - result2 );
 
-        if (h.getHitPoints() <= 0){
-            h.setHitPoints(0);
-            this.setExperiencePoints(h.getLevel());
-        }
     }
 
     public final void fight(Pyromancer hero, String s){
