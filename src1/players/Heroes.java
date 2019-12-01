@@ -9,6 +9,7 @@ public class Heroes {
     private int level;
     private long dot1 = 0;
     private int index1 = 0;
+    private int paralyzed = 0;
 
     public Heroes(final int hitPoints, final int bonusHitPoints,
                   final int experiencePoints, final int level, final String letter){
@@ -44,6 +45,10 @@ public class Heroes {
         index1 = index;
     }
 
+    public int getParalyzed() {
+        return paralyzed;
+    }
+
     public final int getExperiencePoints() {
         return experiencePoints;
     }
@@ -67,12 +72,9 @@ public class Heroes {
     public void setExperiencePoints(final int loserLevel){
         int x = 200 - (level - loserLevel) * 40;
         this.experiencePoints += Math.max(0, x);
-        if (this.experiencePoints >= 250 + 50 * this.level){
+        if (this.experiencePoints >= 250 + 50 * this.level && this.hitPoints > 0){
             //noul nivel
             this.level = (this.experiencePoints - 250) / 50 + 1;
-            System.out.println("punctele bonus sunt :" + bonusHitPoints);
-            System.out.println("punctele standard sunt:" + HeroesFactory.getInstance().getHeroesByLetter
-                    (this.getLetter()).getHitPoints() );
             //puntctele hp se redau
             setHitPoints(HeroesFactory.getInstance().getHeroesByLetter
                     (this.getLetter()).getHitPoints() + bonusHitPoints * this.level);
@@ -82,6 +84,12 @@ public class Heroes {
     public final String getLetter() {
         return this.letter;
     }
+
+    public void setParalyzed(int paralyzed) {
+        this.paralyzed = paralyzed;
+    }
+
+
 
     public void setHitPoints(final int hitPoints){
         this.hitPoints = hitPoints;

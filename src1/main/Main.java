@@ -12,6 +12,7 @@ public final class Main {
         Input input = new Input(args[0], args[1]);
         GameInput gameInput = input.load();
         ArrayList<Map> playersMap = new ArrayList<>();
+
         for (int i = 0; i < gameInput.getP(); i++) {
             playersMap.add(new Map(gameInput.getPlayers()[i], i));
         }
@@ -26,7 +27,6 @@ public final class Main {
             }
 
             for (Map player1 : playersMap){
-                boolean ok = true;
                 if(player1.getHero().getHitPoints() <= 0){
                     continue;
                 }
@@ -48,13 +48,20 @@ public final class Main {
                             player1.getHero().getHitPoints() > 0 &&
                             player1.getColumn() == player2.getColumn() &&
                             player1.getLine() == player2.getLine()){
-                        System.out.println("se bat ");
+
+                        if( player2.getHero().getId() == 4 && i == 10){
+                            System.out.println(player2.getHero().getHitPoints());
+                        }
+
                         player1.getHero().accept(player2.getHero(), pos);
                         player2.getHero().accept(player1.getHero(), pos);
+
                         if (player1.getHero().getHitPoints() <= 0){
                             player1.getHero().setHitPoints(0);
                             player2.getHero().setExperiencePoints(player1.getHero().getLevel());
-                        } else if (player2.getHero().getHitPoints() <= 0){
+                        }
+
+                        if (player2.getHero().getHitPoints() <= 0){
                             player2.getHero().setHitPoints(0);
                             player1.getHero().setExperiencePoints(player2.getHero().getLevel());
                         }
@@ -62,8 +69,7 @@ public final class Main {
                     }
                 }
             }
-            System.out.println("Runda " + i);
-            System.out.println("-------------------------------------");
+            /*System.out.println("Round: " + i);
             for(Map player : playersMap){
                 System.out.print(player.getHero().getLetter()+ " ");
                 if(player.getHero().getHitPoints() <= 0){
@@ -75,6 +81,7 @@ public final class Main {
                             + player.getLine() + " " + player.getColumn());
                 }
             }
+            System.out.println("-----------END ROUND--------");*/
         }
 
         String s = "";
@@ -93,3 +100,18 @@ public final class Main {
         input.write(s);
     }
 }
+
+/*
+            System.out.println("Round: " + i);
+            for(Map player : playersMap){
+                System.out.print(player.getHero().getLetter()+ " ");
+                if(player.getHero().getHitPoints() <= 0){
+                    System.out.println("dead");
+                } else {
+                    System.out.println(player.getHero().getLevel() + " "
+                            + player.getHero().getExperiencePoints() + " "
+                            + player.getHero().getHitPoints() + " "
+                            + player.getLine() + " " + player.getColumn());
+                }
+            }
+            System.out.println("-----------END ROUND--------");*/

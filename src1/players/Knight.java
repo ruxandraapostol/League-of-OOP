@@ -40,8 +40,10 @@ public class Knight extends Heroes {
     }
 
     public void newScore( Heroes h, float execute, float slam, String s) {
-        float conditon = (float) (0.2 + 0.01 * this.getLevel()) * HeroesFactory.
-                getInstance().getHeroesByLetter(h.getLetter()).getHitPoints();
+        float conditon = (float) (0.2 + 0.01 * this.getLevel()) * (HeroesFactory.
+                getInstance().getHeroesByLetter(h.getLetter()).getHitPoints() +
+                h.getLevel() * h.getBonusHitPoints());
+
         if ( h.getHitPoints() < conditon && this.getLevel() <= 20) {
             h.setHitPoints(0);
         } else {
@@ -49,10 +51,12 @@ public class Knight extends Heroes {
             if (s.equals("L")) {
                 mod = Modifiers.LAND;
             }
-            int result = (int) Math.round((Modifiers.DAMAGE1 + Modifiers.DAMAGE1BONUS
+            int result = Math.round((Modifiers.DAMAGE1 + Modifiers.DAMAGE1BONUS
                     * this.getLevel()) * execute * mod);
-            result += (int) Math.round((Modifiers.DAMAGE2 + Modifiers.DAMAGE2BONUS
+            result += Math.round((Modifiers.DAMAGE2 + Modifiers.DAMAGE2BONUS
                     * this.getLevel()) * slam * mod);
+            h.setParalyzed(1);
+            h.setDot1(0, 0);
             h.setHitPoints(h.getHitPoints() - result);
         }
     }

@@ -28,6 +28,10 @@ public class Map {
     }
 
     public void move(char move) {
+        if(hero.getParalyzed() != 0){
+            hero.setParalyzed(hero.getParalyzed() - 1);
+            return;
+        }
         if(move == 'L') {
             column --;
         } else if(move == 'R') {

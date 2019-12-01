@@ -62,12 +62,14 @@ public class Rogue extends Heroes {
         if (s.equals("W")) {
             mod = Modifiers.LAND;
             h.setDot1(Math.round((Modifiers.DOT + Modifiers.BONUS * this.getLevel()) * mod * paralysis) , 2 * Modifiers.INDEX);
+            h.setParalyzed(2 * Modifiers.INDEX);
             if (nr == 3){
                 criticalHit = 1.5f;
                 nr = 0;
             }
         } else {
             h.setDot1(Math.round((Modifiers.DOT + Modifiers.BONUS * this.getLevel()) * mod * paralysis) , Modifiers.INDEX);
+            h.setParalyzed( Modifiers.INDEX);
             if(nr == 3) {
                 nr = 0;
             }
