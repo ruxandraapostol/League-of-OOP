@@ -2,15 +2,15 @@ package players;
 
 public class Knight extends Heroes {
     public Knight(final int hitPoints, final int bonusHitPoints,
-                      final int experiencePoints, final int level, final String letter){
+                      final int experiencePoints, final int level, final String letter) {
         super(hitPoints, bonusHitPoints, experiencePoints, level, letter);
     }
 
-    public final void accept(Heroes h, String s) {
+    public final void accept(final Heroes h, final String s) {
         h.fight(this, s);
     }
 
-    private class Modifiers {
+    private static class Modifiers {
         public static final float DAMAGE1 = 200;
         public static final float DAMAGE2 = 100;
         public static final float DAMAGE1BONUS = 30;
@@ -27,53 +27,85 @@ public class Knight extends Heroes {
         public static final float KVSW2 = 1.05f;
 
         public static final float LAND = 1.15f;
+        public static final float HPPROCENT = 0.2f;
+        public static final float BONUSPROCENT = 0.01f;
+        public static final float COND = 20;
     }
 
+    /**
+     * Calculeaza cat damage da un Knight fara a lua
+     * in considerare modificatorii de rasa. Ia in considerare
+     * modificatorii de teren.
+     * @param s indica suprafata pe care va fi batalia
+     * @return returneaza damage-ul
+     */
     @Override
-    public final int totalDamage( String s){
+    public int totalDamage(final String s) {
         float mod = 1;
         if (s.equals("L")) {
             mod = Modifiers.LAND;
         }
-        return (int) Math.round((Modifiers.DAMAGE1 + Modifiers.DAMAGE1BONUS * this.getLevel()) * mod) +
-                (int) Math.round((Modifiers.DAMAGE2 + Modifiers.DAMAGE2BONUS * this.getLevel())*mod);
+        return Math.round((Modifiers.DAMAGE1 + Modifiers.DAMAGE1BONUS
+                * this.getLevel()) * mod) + Math.round((Modifiers.DAMAGE2
+                + Modifiers.DAMAGE2BONUS * this.getLevel()) * mod);
     }
 
-    public void newScore( Heroes h, float execute, float slam, String s) {
-        float conditon = (float) (0.2 + 0.01 * this.getLevel()) * (HeroesFactory.
-                getInstance().getHeroesByLetter(h.getLetter()).getHitPoints() +
-                h.getLevel() * h.getBonusHitPoints());
+    /**
+     * Calculez damage-ul pe care dat si il scad din hp-ul victimei.
+     * Am grija ca daca hp-ul victimei este mai mic decat limita din
+     * enunt sa il omor instant. Aplic incapacitatea.
+     * @param h victima
+     * @param execute modificatorul de rasa ce trebuie aplicat pentru
+     *              abilitatea execute
+     * @param slam modificatorul de rasa ce trebuie aplicat pentru
+     *              abilitatea slam
+     * @param s suprafata de teren
+     */
+    public final void newScore(final Heroes h, final float execute,
+                               final float slam, final String s) {
+        //calculez limita minima de hp
+        float conditon = (float) (Modifiers.HPPROCENT + Modifiers.BONUSPROCENT
+                * this.getLevel()) * (HeroesFactory.getInstance().getHeroesByLetter(
+                h.getLetter()).getHitPoints() + h.getLevel() * h.getBonusHitPoints());
 
-        if ( h.getHitPoints() < conditon && this.getLevel() <= 20) {
+        //daca e incalcata il omor instant
+        if (h.getHitPoints() < conditon && this.getLevel() <= Modifiers.COND) {
             h.setHitPoints(0);
         } else {
+            //modificator de teren
             float mod = 1;
             if (s.equals("L")) {
                 mod = Modifiers.LAND;
             }
+            //calculez hp ul ce trebuie scazut victimei
             int result = Math.round((Modifiers.DAMAGE1 + Modifiers.DAMAGE1BONUS
                     * this.getLevel()) * execute * mod);
             result += Math.round((Modifiers.DAMAGE2 + Modifiers.DAMAGE2BONUS
                     * this.getLevel()) * slam * mod);
+            h.setHitPoints(h.getHitPoints() - result);
+
+            //setez incapacitatea
             h.setParalyzed(1);
             h.setDot1(0, 0);
-            h.setHitPoints(h.getHitPoints() - result);
         }
     }
 
-    public final void fight(Pyromancer hero, String s){
+    //In functie de instanta obiectul cu care interactionaza
+    //va fi aplicata metoda corespunzatoare, care va apela metoda de
+    // calculare a damage-ului dupa formulele din enunt
+    public final void fight(final Pyromancer hero, final String s) {
         newScore(hero, Modifiers.KVSP1, Modifiers.KVSP2, s);
     }
 
-    public final void fight (Wizard hero, String s){
-        newScore(hero, Modifiers.KVSW1, Modifiers.KVSW2 , s);
+    public final void fight(final Wizard hero, final String s) {
+        newScore(hero, Modifiers.KVSW1, Modifiers.KVSW2, s);
     }
 
-    public final void fight (Knight hero, String s){
+    public final void fight(final Knight hero, final String s) {
         newScore(hero, Modifiers.KVSK1, Modifiers.KVSK2, s);
     }
 
-    public final void fight (Rogue hero, String s){
+    public final void fight(final Rogue hero, final String s) {
         newScore(hero, Modifiers.KVSR1, Modifiers.KVSR2, s);
     }
 }
