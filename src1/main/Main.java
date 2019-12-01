@@ -30,6 +30,9 @@ public final class Main {
                 if(player1.getHero().getHitPoints() <= 0){
                     continue;
                 }
+                if(player1.getLine() > gameInput.getN() || player1.getColumn() > gameInput.getM()){
+                    continue;
+                }
                 String pos = "" + gameInput.getMap().get(player1.getLine()).charAt(player1.getColumn());
                 for (Map player2 : playersMap){
                     if(player2.getHero().getHitPoints() <= 0) {

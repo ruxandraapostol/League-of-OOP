@@ -1,6 +1,7 @@
 package players;
 
 public class Wizard extends Heroes {
+    private int nr = 2;
     public Wizard(final int hitPoints, final int bonusHitPoints,
                       final int experiencePoints, final int level, final String letter){
         super(hitPoints, bonusHitPoints, experiencePoints, level, letter);
@@ -29,6 +30,7 @@ public class Wizard extends Heroes {
 
     public void newScore(final Heroes h, final float drain, final float deflect, String s ) {
         float mod = 1;
+        nr ++;
         if (s.equals("D")) {
             mod = Modifiers.LAND;
         }
@@ -38,18 +40,27 @@ public class Wizard extends Heroes {
                         HeroesFactory.getInstance().getHeroesByLetter(h.getLetter()).
                         getBonusHitPoints() * h.getLevel() ))) * drain * mod ) ;
 
-        System.out.println(result);
-
+        float criticalHit = 1;
+        float result2 = 0;
         if( h instanceof Pyromancer || h instanceof Knight || h instanceof Rogue){
             float procent = Modifiers.DAMAGE2 + Modifiers.DAMAGE2BONUS * this.getLevel();
             if ( procent > Modifiers.COND){
                 procent = Modifiers.COND;
             }
-            System.out.println("atentiune atentiune " + h.totalDamage(s));
-            result += (int) Math.round(mod * deflect * procent * h.totalDamage(s));
+
+            if(h instanceof Rogue) {
+                if (nr == 3 && s.equals("W")) {
+                        criticalHit = 1.5f;
+                }
+                result2 = ((Rogue) h).totalBackstab(criticalHit);
+            }
+            result2 = (int) Math.round(mod * deflect * procent * ( h.totalDamage(s) + result2) );
         }
-        System.out.println(result);
-        h.setHitPoints(h.getHitPoints() - result);
+        if(nr == 3){
+            nr = 0;
+        }
+
+        h.setHitPoints(h.getHitPoints() - result - (int) result2);
         if (h.getHitPoints() <= 0){
             h.setHitPoints(0);
             this.setExperiencePoints(h.getLevel());

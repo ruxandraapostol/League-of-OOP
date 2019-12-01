@@ -43,9 +43,15 @@ public class Rogue extends Heroes {
         if (s.equals("W")) {
             mod = Modifiers.LAND;
         }
-        System.out.println(Math.round((Modifiers.DAMAGE1 + Modifiers.DAMAGE1BONUS * this.getLevel()) * mod));
-        return (int) Math.round((Modifiers.DAMAGE1 + Modifiers.DAMAGE1BONUS * this.getLevel()) * mod) +
-                (int) Math.round((Modifiers.DAMAGE2 + Modifiers.DAMAGE2BONUS * this.getLevel()) * mod);
+        return (int) Math.round((Modifiers.DAMAGE2 + Modifiers.DAMAGE2BONUS * this.getLevel()) * mod);
+    }
+
+    public final int totalBackstab(float criticalHit){
+        float mod = 1;
+        if (criticalHit != 1) {
+            mod = Modifiers.LAND;
+        }
+        return (int) Math.round((Modifiers.DAMAGE1 + Modifiers.DAMAGE1BONUS * this.getLevel()) * mod * criticalHit);
     }
 
     public final void newScore(final Heroes h,
