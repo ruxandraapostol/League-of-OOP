@@ -1,15 +1,17 @@
 package players;
 
 public class Wizard extends Heroes {
-    private int nr = 2;
+    private int nr = 2; // verific daca e runda de criticalHit
     public Wizard(final int hitPoints, final int bonusHitPoints,
-                      final int experiencePoints, final int level, final String letter){
+                      final int experiencePoints, final int level, final String letter) {
         super(hitPoints, bonusHitPoints, experiencePoints, level, letter);
     }
 
-    public final void accept(Heroes h, String s) { h.fight(this, s); }
+    public final void accept(final Heroes h, final String s) {
+        h.fight(this, s);
+    }
 
-    private class Modifiers {
+    private static class Modifiers {
         public static final float DAMAGE1 = 0.2f;
         public static final float DAMAGE2 = 0.35f;
         public static final float DAMAGE1BONUS = 0.05f;
@@ -23,58 +25,82 @@ public class Wizard extends Heroes {
         public static final float WVSR2 = 1.2f;
         public static final float WVSK2 = 1.4f;
         public static final float WVSP2 = 1.3f;
+
         public static final float LAND = 1.1f;
         public static final float COND = 0.7f;
         public static final float PROC = 0.3f;
+        public static final int ROUNDS = 3;
+        public static final float CRITICAL = 1.5f;
     }
 
-    public void newScore(final Heroes h, final float drain, final float deflect, String s ) {
+    /**
+     * Calculez damage-ul dat si il scad din hp-ul victimei.
+     * Verific daca trepuie sa modific Dot-ul victime, tinand cont de
+     * modificatorii de rasa si de teren. De asemenea, vad daca trebuie
+     * dat critical hit
+     * @param h victima
+     * @param drain modificatorul de rasa ce trebuie aplicat pentru
+     *              abilitatea drain
+     * @param deflect modificatorul de rasa ce trebuie aplicat pentru
+     *              abilitatea deflect
+     * @param s suprafata de teren
+     */
+    public final void newScore(final Heroes h, final float drain,
+                               final float deflect, final String s) {
+        //modificator de teren
         float mod = 1;
-        nr ++;
+        nr++;
         if (s.equals("D")) {
             mod = Modifiers.LAND;
         }
-        int result = (int) Math.round((Modifiers.DAMAGE1 + Modifiers.DAMAGE1BONUS
-                * this.getLevel()) * (Math.min(h.getHitPoints(), Modifiers.PROC *
-                (HeroesFactory.getInstance().getHeroesByLetter(h.getLetter()).getHitPoints() +
-                        HeroesFactory.getInstance().getHeroesByLetter(h.getLetter()).
-                        getBonusHitPoints() * h.getLevel() ))) * drain * mod ) ;
+        //damage dat de drain cu formula din enunt
+        int result = Math.round((Modifiers.DAMAGE1 + Modifiers.DAMAGE1BONUS
+                * this.getLevel()) * (Math.min(h.getHitPoints(), Modifiers.PROC
+                * (HeroesFactory.getInstance().getHeroesByLetter(h.getLetter()).
+                getHitPoints() + HeroesFactory.getInstance().getHeroesByLetter(
+                h.getLetter()).getBonusHitPoints() * h.getLevel()))) * drain * mod);
 
         float criticalHit = 1;
         float result2 = 0;
-        if( h instanceof Pyromancer || h instanceof Knight || h instanceof Rogue){
+        //calculez damage doar pentru victime ce nu sunt Wizard
+        if (h.getLetter() != "W") {
+            //stabilesc procentul acestei abilitati dupa formula
             float procent = Modifiers.DAMAGE2 + Modifiers.DAMAGE2BONUS * this.getLevel();
-            if ( procent > Modifiers.COND){
+            if (procent > Modifiers.COND) {
                 procent = Modifiers.COND;
             }
-
-            if(h instanceof Rogue) {
-                if (nr == 3 && s.equals("W")) {
-                        criticalHit = 1.5f;
+            //am grija sa iau in calcul si criticalHit pentru Rogue
+            if (h.getLetter().equals("R")) {
+                if (nr == Modifiers.ROUNDS && s.equals("W")) {
+                        criticalHit = Modifiers.CRITICAL;
                 }
                 result2 = ((Rogue) h).totalBackstab(criticalHit);
             }
-            result2 = (int) Math.round(mod * deflect * procent * ( h.totalDamage(s) + result2) );
+            result2 = Math.round(mod * deflect * procent * (h.totalDamage(s) + result2));
         }
-        if(nr == 3){
+        if (nr == Modifiers.ROUNDS) {
             nr = 0;
         }
+        //scad damage din viata victimei
         h.setHitPoints(h.getHitPoints() - result - (int) result2);
     }
 
-    public final void fight(Pyromancer hero, String s){
+    //In functie de instanta obiectul cu care interactionaza
+    //va fi aplicata metoda corespunzatoare, care va apela metoda de
+    // calculare a damage-ului dupa formulele din enunt
+    public final void fight(final Pyromancer hero, final String s) {
         newScore(hero, Modifiers.WVSP1, Modifiers.WVSP2, s);
     }
 
-    public final void fight (Wizard hero, String s){
+    public final void fight(final Wizard hero, final String s) {
         newScore(hero, Modifiers.WVSW1, 0, s);
     }
 
-    public final void fight (Knight hero, String s){
+    public final void fight(final Knight hero, final String s) {
         newScore(hero, Modifiers.WVSK1, Modifiers.WVSK2, s);
     }
 
-    public final void fight (Rogue hero, String s){
+    public final void fight(final Rogue hero, final String s) {
         newScore(hero, Modifiers.WVSR1, Modifiers.WVSR2, s);
     }
 }

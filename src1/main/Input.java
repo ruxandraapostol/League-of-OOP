@@ -4,10 +4,9 @@ import fileio.FileSystem;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.io.FileWriter;
 
 public class Input {
-    public static final int CONSTANT =3;
+    public static final int CONSTANT = 3;
     private final String inputFile;
     private final String outputFile;
 
@@ -16,6 +15,7 @@ public class Input {
         this.outputFile = outputFile;
     }
 
+    //citirea din fisier
     public final GameInput load() {
         try {
             FileSystem fs = new FileSystem(inputFile, outputFile);
@@ -45,7 +45,8 @@ public class Input {
         return new GameInput();
     }
 
-    public void write (String s){
+    // scrierea in fisier
+    public final void write(final String s) {
         try {
             FileSystem fs = new FileSystem(inputFile, outputFile);
             fs.writeWord(s);

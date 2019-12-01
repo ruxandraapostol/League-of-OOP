@@ -29,14 +29,14 @@ public class HeroesFactory {
         return instance;
     }
 
-    public Heroes getHeroesByLetter(final String s) {
-        if(s.equals("P")) {
+    public final Heroes getHeroesByLetter(final String s) {
+        if (s.equals("P")) {
             return new Pyromancer(AssetsHitPoints.PYROMANHP,
                     AssetsBonusHP.PYROMANBHP, 0, 0, "P");
-        } else if(s.equals("W")) {
+        } else if (s.equals("W")) {
             return new Wizard(AssetsHitPoints.WIZARDHP,
                     AssetsBonusHP.WIZARDBHP, 0, 0, "W");
-        } else if(s.equals("R")) {
+        } else if (s.equals("R")) {
             return new Rogue(AssetsHitPoints.ROGUEHP,
                     AssetsBonusHP.ROGUEBHP, 0, 0, "R");
         }
