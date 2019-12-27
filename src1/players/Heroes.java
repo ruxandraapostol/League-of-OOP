@@ -1,5 +1,7 @@
 package players;
 
+import angels.Angels;
+
 public class Heroes {
     private int id = 0; //pentru a nu se batea un jucator cu el insusi
     private String letter;  //sa imi fie mai usor sa identific tipul jucatorului
@@ -10,6 +12,8 @@ public class Heroes {
     private long dot1 = 0;
     private int index1 = 0; //numarul de runde pentru aplicarea dot-ului
     private int paralyzed = 0;  //numarul de runde pentru incapacitate
+    private float angelsModifyer = 1;
+    private float strategy = 1;
 
     public Heroes(final int hitPoints, final int bonusHitPoints,
                   final int experiencePoints, final int level, final String letter) {
@@ -38,6 +42,11 @@ public class Heroes {
     public void fight(final Rogue h, final String s) { }
     public void fight(final Wizard h, final String s) { }
     public void fight(final Heroes h, final String s) { }
+
+    public void acceptAngel (final Angels angels) {
+        angels.angelPlay(this);
+    }
+
 
     /**
      * Aceasta metoda va fi rescrisa in clasele derivate.
@@ -84,6 +93,10 @@ public class Heroes {
         return id;
     }
 
+    public final float getAngelsModifyer()  {
+        return angelsModifyer;
+    }
+
     public final int getBonusHitPoints() {
         return bonusHitPoints;
     }
@@ -92,8 +105,16 @@ public class Heroes {
         return this.letter;
     }
 
+    public final float getStrategy() { return  this.strategy; }
+
+    public final void setStrategy(final float strategy) { this.strategy = strategy; }
+
     public final void setId(final int id) {
         this.id = id;
+    }
+
+    public final void setAngelsModifyer(final float angelsModifyer) {
+        this.angelsModifyer = angelsModifyer;
     }
 
     public static class Constants {
@@ -117,6 +138,17 @@ public class Heroes {
         }
     }
 
+    public final void setXPByAngel (final int xpByAngel) {
+        this.experiencePoints = xpByAngel;
+        if (this.experiencePoints >= Constants.TWOHUNDREDFIFTY
+                + Constants.FIFTY * this.level && this.hitPoints > 0) {
+            //noul nivel
+            this.level = (this.experiencePoints - Constants.TWOHUNDREDFIFTY) / Constants.FIFTY + 1;
+            //puntctele hp se redau
+            setHitPoints(HeroesFactory.getInstance().getHeroesByLetter(
+                    this.getLetter()).getHitPoints() + bonusHitPoints * this.level);
+        }
+    }
 
     public final void setParalyzed(final int paralyzed) {
         this.paralyzed = paralyzed;

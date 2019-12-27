@@ -1,5 +1,7 @@
 package players;
 
+import angels.Angels;
+
 public class Wizard extends Heroes {
     private int nr = 2; // verific daca e runda de criticalHit
     public Wizard(final int hitPoints, final int bonusHitPoints,
@@ -9,6 +11,10 @@ public class Wizard extends Heroes {
 
     public final void accept(final Heroes h, final String s) {
         h.fight(this, s);
+    }
+
+    public void acceptAngel (final Angels angels) {
+        angels.angelPlay(this);
     }
 
     private static class Modifiers {
@@ -31,6 +37,13 @@ public class Wizard extends Heroes {
         public static final float PROC = 0.3f;
         public static final int ROUNDS = 3;
         public static final float CRITICAL = 1.5f;
+
+        public static final float GOODSTRATEGY = 1.5f;
+        public static final float GOODHP = 0.9f;
+        public static final float BADSTRATEGY = 0.8f;
+        public static final float BADHP = 1.2f;
+        public static final int TWO = 2;
+        public static final int FOUR = 4;
     }
 
     /**
@@ -47,6 +60,20 @@ public class Wizard extends Heroes {
      */
     public final void newScore(final Heroes h, final float drain,
                                final float deflect, final String s) {
+
+        int maxLevelHp = this.getLevel() * HeroesFactory.getInstance().
+                getHeroesByLetter(this.getLetter()).getBonusHitPoints()
+                + HeroesFactory.getInstance().getHeroesByLetter(this.getLetter()).getHitPoints();
+
+        if (this.getHitPoints() >  maxLevelHp / Modifiers.FOUR && this.getHitPoints() < maxLevelHp / Modifiers.TWO) {
+            this.setHitPoints((int) (this.getHitPoints() * Modifiers.GOODHP));
+            this.setStrategy(Modifiers.GOODSTRATEGY);
+
+        } else if (this.getHitPoints() < maxLevelHp / Modifiers.FOUR) {
+            this.setHitPoints((int) (this.getHitPoints() * Modifiers.BADHP));
+            this.setStrategy(Modifiers.BADSTRATEGY);
+        }
+
         //modificator de teren
         float mod = 1;
         nr++;
@@ -58,7 +85,8 @@ public class Wizard extends Heroes {
                 * this.getLevel()) * (Math.min(h.getHitPoints(), Modifiers.PROC
                 * (HeroesFactory.getInstance().getHeroesByLetter(h.getLetter()).
                 getHitPoints() + HeroesFactory.getInstance().getHeroesByLetter(
-                h.getLetter()).getBonusHitPoints() * h.getLevel()))) * drain * mod);
+                h.getLetter()).getBonusHitPoints() * h.getLevel())))
+                * this.getAngelsModifyer() * this.getStrategy() * drain * mod);
 
         float criticalHit = 1;
         float result2 = 0;
@@ -76,7 +104,7 @@ public class Wizard extends Heroes {
                 }
                 result2 = ((Rogue) h).totalBackstab(criticalHit);
             }
-            result2 = Math.round(mod * deflect * procent * (h.totalDamage(s) + result2));
+            result2 = Math.round(mod * this.getAngelsModifyer() * this.getStrategy() * deflect * procent * (h.totalDamage(s) + result2));
         }
         if (nr == Modifiers.ROUNDS) {
             nr = 0;

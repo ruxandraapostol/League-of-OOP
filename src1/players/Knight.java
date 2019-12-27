@@ -1,5 +1,7 @@
 package players;
 
+import angels.Angels;
+
 public class Knight extends Heroes {
     public Knight(final int hitPoints, final int bonusHitPoints,
                       final int experiencePoints, final int level, final String letter) {
@@ -8,6 +10,10 @@ public class Knight extends Heroes {
 
     public final void accept(final Heroes h, final String s) {
         h.fight(this, s);
+    }
+
+    public void acceptAngel (final Angels angels) {
+        angels.angelPlay(this);
     }
 
     private static class Modifiers {
@@ -30,6 +36,13 @@ public class Knight extends Heroes {
         public static final float HPPROCENT = 0.2f;
         public static final float BONUSPROCENT = 0.01f;
         public static final float COND = 20;
+
+        public static final float GOODSTRATEGY = 1.5f;
+        public static final float GOODHP = 0.8f;
+        public static final float BADSTRATEGY = 0.8f;
+        public static final float BADSHP = 1.25f;
+        public static final int TWO = 2;
+        public static final int  THREE = 3;
     }
 
     /**
@@ -45,9 +58,9 @@ public class Knight extends Heroes {
         if (s.equals("L")) {
             mod = Modifiers.LAND;
         }
-        return Math.round((Modifiers.DAMAGE1 + Modifiers.DAMAGE1BONUS
-                * this.getLevel()) * mod) + Math.round((Modifiers.DAMAGE2
-                + Modifiers.DAMAGE2BONUS * this.getLevel()) * mod);
+        return Math.round((Modifiers.DAMAGE1 + Modifiers.DAMAGE1BONUS * this.getLevel())
+                * mod) + Math.round((Modifiers.DAMAGE2 + Modifiers.DAMAGE2BONUS
+                * this.getLevel())  * mod);
     }
 
     /**
@@ -61,8 +74,21 @@ public class Knight extends Heroes {
      *              abilitatea slam
      * @param s suprafata de teren
      */
-    public final void newScore(final Heroes h, final float execute,
-                               final float slam, final String s) {
+    public final void newScore(final Heroes h, float execute,
+                                float slam, final String s) {
+        int maxLevelHp = this.getLevel() * HeroesFactory.getInstance().
+                getHeroesByLetter(this.getLetter()).getBonusHitPoints()
+                + HeroesFactory.getInstance().getHeroesByLetter(this.getLetter()).getHitPoints();
+
+        if (this.getHitPoints() >  maxLevelHp / Modifiers.THREE && this.getHitPoints() < maxLevelHp / Modifiers.TWO) {
+            this.setHitPoints((int) (this.getHitPoints() * Modifiers.GOODHP));
+            this.setStrategy(Modifiers.GOODSTRATEGY);
+
+        } else if (this.getHitPoints() < maxLevelHp / Modifiers.THREE) {
+            this.setHitPoints((int) (this.getHitPoints() * Modifiers.BADSHP));
+            this.setStrategy(Modifiers.BADSTRATEGY);
+        }
+
         //calculez limita minima de hp
         float conditon = (float) (Modifiers.HPPROCENT + Modifiers.BONUSPROCENT
                 * this.getLevel()) * (HeroesFactory.getInstance().getHeroesByLetter(
@@ -79,9 +105,11 @@ public class Knight extends Heroes {
             }
             //calculez hp ul ce trebuie scazut victimei
             int result = Math.round((Modifiers.DAMAGE1 + Modifiers.DAMAGE1BONUS
-                    * this.getLevel()) * execute * mod);
+                    * this.getLevel()) * this.getAngelsModifyer()
+                    * this.getStrategy() * execute * mod);
             result += Math.round((Modifiers.DAMAGE2 + Modifiers.DAMAGE2BONUS
-                    * this.getLevel()) * slam * mod);
+                    * this.getLevel()) * this.getAngelsModifyer()
+                    * this.getStrategy() * slam * mod);
             h.setHitPoints(h.getHitPoints() - result);
 
             //setez incapacitatea

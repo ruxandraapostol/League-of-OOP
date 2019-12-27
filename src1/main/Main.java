@@ -1,6 +1,13 @@
 package main;
 
+import angels.Angels;
+import greatwizard.GreatWizard;
+import greatwizard.ObserverGreatWizard;
+import javafx.beans.Observable;
 import map.Map;
+import players.AssociationLetterType;
+import players.Heroes;
+
 import java.util.ArrayList;
 
 public final class Main {
@@ -12,6 +19,9 @@ public final class Main {
         Input input = new Input(args[0], args[1]);
         GameInput gameInput = input.load();
         ArrayList<Map> playersMap = new ArrayList<>();
+        GreatWizard greatWizard = new GreatWizard("");
+        ObserverGreatWizard observerGreatWizard = new ObserverGreatWizard(greatWizard);
+        AssociationLetterType association = new AssociationLetterType();
 
         //asociez fiecarui jucator o linie si o coloana
         for (int i = 0; i < gameInput.getP(); i++) {
@@ -20,6 +30,8 @@ public final class Main {
 
         //pentru fiecare runda
         for (int i = 0; i < gameInput.getR(); i++) {
+            String output = "~~ RUNDA " + (i + 1) + " ~~";
+            greatWizard.setValue(output);
             //fiecare jucator este mutat
             for (int j = 0; j < gameInput.getP(); j++) {
                 playersMap.get(j).move(gameInput.getMove().get(i).charAt(j));
@@ -51,8 +63,12 @@ public final class Main {
                             && player1.getLine() == player2.getLine()) {
 
                         //se realizeaza interactiunea, bataia
+                        int copyHP = player1.getHero().getHitPoints();
                         player1.getHero().accept(player2.getHero(), pos);
+                        int copyHPafterFight = copyHP - player1.getHero().getHitPoints();
+                        player1.getHero().setHitPoints(copyHP);
                         player2.getHero().accept(player1.getHero(), pos);
+                        player1.getHero().setHitPoints(player1.getHero().getHitPoints() - copyHPafterFight);
 
                         //daca vreunul din ei a murit i se dau punctele de experienta
                         //celuilalt, respectiv nivelul, dupa caz
@@ -69,10 +85,29 @@ public final class Main {
                     }
                 }
             }
+            for (Angels angel : gameInput.getAngels()){
+                if (angel.getRound() != i){
+                    continue;
+                } else {
+                    output = "Angel " + angel.getType() + " spawned at " + angel.getLine() + " " + angel.getColumn();
+                    greatWizard.setValue(output);
+                }
+                for (Map player : playersMap) {
+                    if (angel.getLine() != player.getLine()) {
+                        continue;
+                    }
+                    player.getHero().acceptAngel(angel);
+                    output = angel.getType() + " " + angel.getPredicate() + " "
+                            + association.wordByLetter(player.getHero().getLetter())
+                            + " " + player.getHero().getId();
+                    greatWizard.setValue(output);
+                }
+            }
+            greatWizard.setValue("");
         }
 
         //pentru fiecare jucator creez out-ul
-        String output = "";
+        String output = "~~ Results ~~" + "\n";
         for (Map player : playersMap) {
             output += player.getHero().getLetter() + " ";
             if (player.getHero().getHitPoints() <= 0) {
@@ -84,6 +119,7 @@ public final class Main {
             }
             output += "\n";
         }
+        greatWizard.setValue(output);
         input.write(output);
     }
 }

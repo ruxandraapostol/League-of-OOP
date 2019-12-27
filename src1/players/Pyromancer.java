@@ -1,5 +1,7 @@
 package players;
 
+import angels.Angels;
+
 public class Pyromancer extends Heroes {
     public Pyromancer(final int hitPoints, final int bonusHitPoints,
                       final int experiencePoints, final int level, final String letter) {
@@ -8,6 +10,10 @@ public class Pyromancer extends Heroes {
 
     public final void accept(final Heroes h, final String s) {
         h.fight(this, s);
+    }
+
+    public void acceptAngel (final Angels angels) {
+        angels.angelPlay(this);
     }
 
     private static class Modifiers {
@@ -24,6 +30,10 @@ public class Pyromancer extends Heroes {
         public static final float PVSP = 0.9f;
         public static final float PVSW = 1.05f;
         public static final float LAND = 1.25f;
+        public static final float GOODSTRATEGY = 1.3f;
+        public static final float BADSTRATEGY = 0.7f;
+        public static final int  THREE = 3;
+        public static final int FOUR = 4;
     }
 
     /**
@@ -39,6 +49,7 @@ public class Pyromancer extends Heroes {
         if (s.equals("V")) {
             mod = Modifiers.LAND;
         }
+
         return Math.round((Modifiers.DAMAGE1 + Modifiers.DAMAGE1BONUS
                 * this.getLevel()) * mod) + Math.round((Modifiers.DAMAGE2
                 + Modifiers.DAMAGE2BONUS * this.getLevel()) * mod);
@@ -51,7 +62,19 @@ public class Pyromancer extends Heroes {
      *                 fireblast, cat si pentru ignite
      * @param s suprafata de teren
      */
-    public final void newScore(final Heroes h, final float ability, final String s) {
+    public final void newScore(final Heroes h, float ability, final String s) {
+        int maxLevelHp = this.getLevel() * HeroesFactory.getInstance().
+                getHeroesByLetter(this.getLetter()).getBonusHitPoints()
+                + HeroesFactory.getInstance().getHeroesByLetter(this.getLetter()).getHitPoints();
+
+        if (this.getHitPoints() <  maxLevelHp / Modifiers.THREE &&
+                this.getHitPoints() > maxLevelHp / Modifiers.FOUR) {
+            this.setHitPoints(this.getHitPoints() * Modifiers.THREE / Modifiers.FOUR);
+            this.setStrategy(Modifiers.GOODSTRATEGY);
+        } else if (this.getHitPoints() < maxLevelHp / Modifiers.FOUR) {
+            this.setHitPoints(this.getHitPoints() * Modifiers.FOUR / Modifiers.THREE);
+            this.setStrategy(Modifiers.BADSTRATEGY);
+        }
         //verific daca am modificator de teren
         float mod = 1;
         if (s.equals("V")) {
@@ -62,11 +85,15 @@ public class Pyromancer extends Heroes {
         h.setDot1(Math.round((Modifiers.DOT + Modifiers.BONUS * this.getLevel())
                 * mod * ability), Modifiers.INDEX);
 
+
         //calculez hp ul ce trebuie scazut victimei
         int result = Math.round((Modifiers.DAMAGE1 + Modifiers.DAMAGE1BONUS
-                * this.getLevel()) * ability * mod);
+                * this.getLevel()) * this.getAngelsModifyer()
+                * this.getStrategy() * ability * mod);
+
         result += Math.round((Modifiers.DAMAGE2 + Modifiers.DAMAGE2BONUS
-                * this.getLevel()) * ability * mod);
+                * this.getLevel()) * this.getAngelsModifyer()
+                * this.getStrategy() * ability * mod);
         h.setHitPoints(h.getHitPoints() - result);
     }
 

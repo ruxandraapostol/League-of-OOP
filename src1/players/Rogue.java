@@ -1,5 +1,7 @@
 package players;
 
+import angels.Angels;
+
 public class Rogue extends Heroes {
     private int nr = 2; //verifica daca e runda de criticalHit
     public Rogue(final int hitPoints, final int bonusHitPoints,
@@ -9,6 +11,10 @@ public class Rogue extends Heroes {
 
     public final void accept(final Heroes h, final String s) {
         h.fight(this, s);
+    }
+
+    public void acceptAngel (final Angels angels) {
+        angels.angelPlay(this);
     }
 
     private static class Modifiers {
@@ -31,8 +37,15 @@ public class Rogue extends Heroes {
         public static final float RVSW2 = 1.25f;
 
         public static final float LAND = 1.15f;
-        public static final int ROUNDS = 3;
         public static final float CRITICAL = 1.5f;
+
+        public static final float GOODSTRATEGY = 1.5f;
+        public static final float GOODHP = 6 / 7;
+        public static final float BADSTRATEGY = 0.8f;
+        public static final float BADHP = 1.2f;
+        public static final int SEVEN = 7;
+        public static final int FIVE = 5;
+
     }
 
     /**
@@ -49,7 +62,7 @@ public class Rogue extends Heroes {
             mod = Modifiers.LAND;
         }
         return Math.round((Modifiers.DAMAGE2 + Modifiers.DAMAGE2BONUS
-                * this.getLevel()) * mod);
+                * this.getLevel())  * mod);
     }
 
     /**
@@ -82,6 +95,18 @@ public class Rogue extends Heroes {
      */
     public final void newScore(final Heroes h,
               final float backstab, final float paralysis, final String s) {
+        int maxLevelHp = this.getLevel() * HeroesFactory.getInstance().
+                getHeroesByLetter(this.getLetter()).getBonusHitPoints()
+                + HeroesFactory.getInstance().getHeroesByLetter(this.getLetter()).getHitPoints();
+
+        if (this.getHitPoints() >  maxLevelHp / Modifiers.SEVEN && this.getHitPoints() < maxLevelHp / Modifiers.FIVE) {
+            this.setHitPoints((int) (this.getHitPoints() * Modifiers.GOODHP));
+            this.setStrategy(Modifiers.GOODSTRATEGY);
+        } else if (this.getHitPoints() < maxLevelHp / Modifiers.SEVEN) {
+            this.setHitPoints((int) (this.getHitPoints() * Modifiers.BADHP));
+            this.setStrategy(Modifiers.BADSTRATEGY);
+        }
+
         nr++;
         float mod = 1;
         float criticalHit = 1;
@@ -108,9 +133,9 @@ public class Rogue extends Heroes {
 
         //calculez hp ul ce trebuie scazut victimei
         int result1 = Math.round((Modifiers.DAMAGE1 + Modifiers.DAMAGE1BONUS
-                * this.getLevel()) * backstab * mod * criticalHit);
+                * this.getLevel()) * this.getAngelsModifyer() * this.getStrategy() * backstab * mod * criticalHit);
         int result2 = Math.round((Modifiers.DAMAGE2 + Modifiers.DAMAGE2BONUS
-                * this.getLevel()) * paralysis * mod);
+                * this.getLevel()) * this.getAngelsModifyer() * this.getStrategy() * paralysis * mod);
         h.setHitPoints(h.getHitPoints() - result1 - result2);
 
     }
