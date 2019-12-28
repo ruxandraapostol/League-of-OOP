@@ -155,6 +155,14 @@ public class Heroes {
     }
 
     public final void setHitPoints(final int hitPoints) {
-        this.hitPoints = hitPoints;
+        int maxLevelHp = this.getLevel() * HeroesFactory.getInstance().
+                getHeroesByLetter(this.getLetter()).getBonusHitPoints()
+                + HeroesFactory.getInstance().getHeroesByLetter(this.getLetter()).getHitPoints();
+        if (hitPoints <= maxLevelHp){
+            this.hitPoints = hitPoints;
+        } else {
+            this.hitPoints = maxLevelHp;
+        }
+
     }
 }

@@ -10,15 +10,10 @@ public class GreatWizard extends Observable {
     }
 
     public void setValue(String value) {
-
-        // daca valoarea s-a schimbat notific observatorul
-        if(!watchedValue.equals(value)) {
-            watchedValue = value;
-
-            // mark as value changed
-            setChanged();
-            // trigger notification
-            notifyObservers(value);
-        }
+        watchedValue = value;
+        // mark as value changed
+        setChanged();
+        // trigger notification
+        notifyObservers(value);
     }
 }

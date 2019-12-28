@@ -62,12 +62,15 @@ public final class Main {
                             && player1.getLine() == player2.getLine()) {
 
                         //se realizeaza interactiunea, bataia
+                        int level1 = player1.getHero().getLevel();
+                        int level2 = player2.getHero().getLevel();
                         int copyHP = player1.getHero().getHitPoints();
                         player1.getHero().accept(player2.getHero(), pos);
                         int copyHPafterFight = copyHP - player1.getHero().getHitPoints();
                         player1.getHero().setHitPoints(copyHP);
                         player2.getHero().accept(player1.getHero(), pos);
                         player1.getHero().setHitPoints(player1.getHero().getHitPoints() - copyHPafterFight);
+
 
                         //daca vreunul din ei a murit i se dau punctele de experienta
                         //celuilalt, respectiv nivelul, dupa caz
@@ -79,6 +82,11 @@ public final class Main {
                                     + association.wordByLetter(player2.getHero().getLetter())
                                     + " " + player2.getHero().getId();
                             greatWizard.setValue(output);
+                            for(int k = level2; k < player2.getHero().getLevel(); k++){
+                                output = association.wordByLetter(player2.getHero().getLetter())
+                                        + " " + player2.getHero().getId() + " reached level " + (k + 1);
+                                greatWizard.setValue(output);
+                            }
                         }
 
                         if (player2.getHero().getHitPoints() <= 0) {
@@ -89,6 +97,11 @@ public final class Main {
                                     + association.wordByLetter(player1.getHero().getLetter())
                                     + " " + player1.getHero().getId();
                             greatWizard.setValue(output);
+                            for(int k = level1; k < player1.getHero().getLevel(); k++){
+                                output = association.wordByLetter(player1.getHero().getLetter())
+                                        + " " + player1.getHero().getId() + " reached level " + (k + 1);
+                                greatWizard.setValue(output);
+                            }
                         }
                         break;
                     }
@@ -113,30 +126,29 @@ public final class Main {
                 } else {
                     output = "Angel " + angel.getType() + " was spawned at " + angel.getLine() + " " + angel.getColumn();
                     greatWizard.setValue(output);
-                }
-                for (Map player : playersMap) {
-                    if (angel.getLine() != player.getLine()) {
-                        continue;
-                    }
-                    if (player.getHero().getHitPoints() <= 0 && !angel.getType().equals("TheDoomer")){
-                        continue;
-                    }
-                    int level = player.getHero().getLevel();
-                    player.getHero().acceptAngel(angel);
-                    output = angel.getType() + " " + angel.getPredicate() + " "
-                            + association.wordByLetter(player.getHero().getLetter())
-                            + " " + player.getHero().getId();
-                    greatWizard.setValue(output);
-                    for(int k = level; k < player.getHero().getLevel(); k++){
-                        output = association.wordByLetter(player.getHero().getLetter())
-                                + " " + player.getHero().getId() + " reached level " + (k + 1);
+                    for (Map player : playersMap) {
+                        if (angel.getLine() != player.getLine()) {
+                            continue;
+                        }
+                        if (player.getHero().getHitPoints() <= 0 && !angel.getType().equals("Spawer")) {
+                            continue;
+                        }
+                        int level = player.getHero().getLevel();
+                        player.getHero().acceptAngel(angel);
+                        output = angel.getType() + " " + angel.getPredicate() + " "
+                                + association.wordByLetter(player.getHero().getLetter())
+                                + " " + player.getHero().getId();
                         greatWizard.setValue(output);
-                    }
-
-                    if (player.getHero().getHitPoints() <= 0){
-                        output = "Player " + association.wordByLetter(player.getHero().getLetter())
-                                + " " + player.getHero().getId() + " was killed by an angel";
-                        greatWizard.setValue(output);
+                        for (int k = level; k < player.getHero().getLevel(); k++) {
+                            output = association.wordByLetter(player.getHero().getLetter())
+                                    + " " + player.getHero().getId() + " reached level " + (k + 1);
+                            greatWizard.setValue(output);
+                        }
+                        if (player.getHero().getHitPoints() <= 0) {
+                            output = "Player " + association.wordByLetter(player.getHero().getLetter())
+                                    + " " + player.getHero().getId() + " was killed by an angel";
+                            greatWizard.setValue(output);
+                        }
                     }
                 }
             }
