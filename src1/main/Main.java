@@ -94,6 +94,19 @@ public final class Main {
                     }
                 }
             }
+           /* output = "~~ Results before angel ~~" + "\n";
+            for (Map player : playersMap) {
+                output += player.getHero().getLetter() + " ";
+                if (player.getHero().getHitPoints() <= 0) {
+                    output += "dead";
+                } else {
+                    output += player.getHero().getLevel() + " " + player.getHero().
+                            getExperiencePoints() + " " + player.getHero().getHitPoints()
+                            + " " + player.getLine() + " " + player.getColumn();
+                }
+                output += "\n";
+            }
+            System.out.println(output);*/
             for (Angels angel : gameInput.getAngels()){
                 if (angel.getRound() != i){
                     continue;
@@ -105,11 +118,21 @@ public final class Main {
                     if (angel.getLine() != player.getLine()) {
                         continue;
                     }
+                    if (player.getHero().getHitPoints() <= 0 && !angel.getType().equals("TheDoomer")){
+                        continue;
+                    }
+                    int level = player.getHero().getLevel();
                     player.getHero().acceptAngel(angel);
                     output = angel.getType() + " " + angel.getPredicate() + " "
                             + association.wordByLetter(player.getHero().getLetter())
                             + " " + player.getHero().getId();
                     greatWizard.setValue(output);
+                    for(int k = level; k < player.getHero().getLevel(); k++){
+                        output = association.wordByLetter(player.getHero().getLetter())
+                                + " " + player.getHero().getId() + " reached level " + (k + 1);
+                        greatWizard.setValue(output);
+                    }
+
                     if (player.getHero().getHitPoints() <= 0){
                         output = "Player " + association.wordByLetter(player.getHero().getLetter())
                                 + " " + player.getHero().getId() + " was killed by an angel";
@@ -118,7 +141,7 @@ public final class Main {
                 }
             }
             greatWizard.setValue("");
-            output = "~~ Results ~~" + "\n";
+            output = "~~ Results after angel ~~" + "\n";
             for (Map player : playersMap) {
                 output += player.getHero().getLetter() + " ";
                 if (player.getHero().getHitPoints() <= 0) {

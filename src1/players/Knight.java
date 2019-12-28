@@ -37,9 +37,9 @@ public class Knight extends Heroes {
         public static final float BONUSPROCENT = 0.01f;
         public static final float COND = 20;
 
-        public static final float GOODSTRATEGY = 1.5f;
+        public static final float GOODSTRATEGY = 0.5f;
         public static final float GOODHP = 0.8f;
-        public static final float BADSTRATEGY = 0.8f;
+        public static final float BADSTRATEGY = -0.2f;
         public static final float BADSHP = 1.25f;
         public static final int TWO = 2;
         public static final int  THREE = 3;
@@ -109,16 +109,16 @@ public class Knight extends Heroes {
             int result;
             if(execute != 1) {
                 result = Math.round((Modifiers.DAMAGE1 + Modifiers.DAMAGE1BONUS
-                        * this.getLevel()) * this.getStrategy() * (execute
+                        * this.getLevel()) * (execute + this.getStrategy()
                         + this.getAngelsModifyer()) * mod);
             } else {
                 result = Math.round((Modifiers.DAMAGE1 + Modifiers.DAMAGE1BONUS
-                        * this.getLevel()) * this.getStrategy() * execute * mod);
+                        * this.getLevel()) * (execute + this.getStrategy()) * mod);
             }
 
             result += Math.round((Modifiers.DAMAGE2 + Modifiers.DAMAGE2BONUS
-                    * this.getLevel()) * this.getStrategy() * (slam
-                    + this.getAngelsModifyer()) * mod);
+                    * this.getLevel()) * (slam + this.getAngelsModifyer()
+                    + this.getStrategy()) * mod);
             h.setHitPoints(h.getHitPoints() - result);
 
             //setez incapacitatea

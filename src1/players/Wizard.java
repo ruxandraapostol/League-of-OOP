@@ -38,8 +38,8 @@ public class Wizard extends Heroes {
         public static final int ROUNDS = 3;
         public static final float CRITICAL = 1.5f;
 
-        public static final float GOODSTRATEGY = 1.5f;
-        public static final float GOODHP = 0.9f;
+        public static final float GOODSTRATEGY = 0.5f;
+        public static final float GOODHP = -0.1f;
         public static final float BADSTRATEGY = 0.8f;
         public static final float BADHP = 1.2f;
         public static final int TWO = 2;
@@ -86,7 +86,7 @@ public class Wizard extends Heroes {
                 * (HeroesFactory.getInstance().getHeroesByLetter(h.getLetter()).
                 getHitPoints() + HeroesFactory.getInstance().getHeroesByLetter(
                 h.getLetter()).getBonusHitPoints() * h.getLevel())))
-                * this.getStrategy() * (drain - this.getAngelsModifyer()) * mod);
+                * (drain + this.getStrategy() + this.getAngelsModifyer()) * mod);
 
         float criticalHit = 1;
         float result2 = 0;
@@ -104,8 +104,8 @@ public class Wizard extends Heroes {
                 }
                 result2 = ((Rogue) h).totalBackstab(criticalHit);
             }
-            result2 = Math.round(mod * this.getStrategy() * (deflect
-                    - this.getAngelsModifyer()) * procent
+            result2 = Math.round(mod * (deflect + this.getStrategy()
+                    + this.getAngelsModifyer()) * procent
                     * (h.totalDamage(s) + result2));
         }
         if (nr == Modifiers.ROUNDS) {

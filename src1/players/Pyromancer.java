@@ -30,8 +30,9 @@ public class Pyromancer extends Heroes {
         public static final float PVSP = 0.9f;
         public static final float PVSW = 1.05f;
         public static final float LAND = 1.25f;
-        public static final float GOODSTRATEGY = 1.3f;
-        public static final float BADSTRATEGY = 0.7f;
+
+        public static final float GOODSTRATEGY = 0.3f;
+        public static final float BADSTRATEGY = -0.3f;
         public static final int  THREE = 3;
         public static final int FOUR = 4;
     }
@@ -84,19 +85,19 @@ public class Pyromancer extends Heroes {
         }
 
         //dau Dot
-        h.setDot1(Math.round((Modifiers.DOT + Modifiers.BONUS * this.getLevel())
-                * mod * ability), Modifiers.INDEX);
+        h.setDot1(Math.round(Math.round((Modifiers.DOT + Modifiers.BONUS * this.getLevel())
+                * mod) * ability), Modifiers.INDEX);
 
 
         //calculez hp ul ce trebuie scazut victimei
         //System.out.println("damage este : " + );
-        int result = Math.round((Modifiers.DAMAGE1 + Modifiers.DAMAGE1BONUS
-                * this.getLevel()) * this.getStrategy() * (ability
-                + this.getAngelsModifyer()) * mod);
+        int result = Math.round(Math.round((Modifiers.DAMAGE1 + Modifiers.DAMAGE1BONUS
+                * this.getLevel()) * mod ) * (ability +  this.getStrategy()
+                + this.getAngelsModifyer()));
 
-        result += Math.round((Modifiers.DAMAGE2 + Modifiers.DAMAGE2BONUS
-                * this.getLevel()) * this.getStrategy() * (ability
-                + this.getAngelsModifyer())* mod);
+        result += Math.round(Math.round((Modifiers.DAMAGE2 + Modifiers.DAMAGE2BONUS
+                * this.getLevel()) * mod) * (ability + this.getStrategy()
+                + this.getAngelsModifyer()));
         h.setHitPoints(h.getHitPoints() - result);
     }
 

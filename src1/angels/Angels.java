@@ -54,7 +54,7 @@ public class Angels {
             return;
         }
         hero.setHitPoints(hero.getHitPoints() + newHP);
-        hero.setAngelsModifyer(angelDamage);
+        hero.setAngelsModifyer(hero.getAngelsModifyer() + angelDamage);
     }
 
     public void angelPlay(Knight knight) {

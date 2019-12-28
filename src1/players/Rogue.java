@@ -39,9 +39,9 @@ public class Rogue extends Heroes {
         public static final float LAND = 1.15f;
         public static final float CRITICAL = 1.5f;
 
-        public static final float GOODSTRATEGY = 1.5f;
+        public static final float GOODSTRATEGY = 0.5f;
         public static final float GOODHP = 6 / 7;
-        public static final float BADSTRATEGY = 0.8f;
+        public static final float BADSTRATEGY = -0.2f;
         public static final float BADHP = 1.2f;
         public static final int SEVEN = 7;
         public static final int FIVE = 5;
@@ -133,10 +133,10 @@ public class Rogue extends Heroes {
 
         //calculez hp ul ce trebuie scazut victimei
         int result1 = Math.round((Modifiers.DAMAGE1 + Modifiers.DAMAGE1BONUS
-                * this.getLevel()) * this.getStrategy() * (backstab
+                * this.getLevel()) * (backstab + this.getStrategy()
                 + this.getAngelsModifyer()) * mod * criticalHit);
         int result2 = Math.round((Modifiers.DAMAGE2 + Modifiers.DAMAGE2BONUS
-                * this.getLevel()) * this.getStrategy() * (paralysis
+                * this.getLevel()) * (paralysis + this.getStrategy()
                 + this.getAngelsModifyer()) * mod);
         h.setHitPoints(h.getHitPoints() - result1 - result2);
 
