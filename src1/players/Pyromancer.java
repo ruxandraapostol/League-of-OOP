@@ -63,17 +63,19 @@ public class Pyromancer extends Heroes {
      * @param s suprafata de teren
      */
     public final void newScore(final Heroes h, float ability, final String s) {
-        int maxLevelHp = this.getLevel() * HeroesFactory.getInstance().
-                getHeroesByLetter(this.getLetter()).getBonusHitPoints()
-                + HeroesFactory.getInstance().getHeroesByLetter(this.getLetter()).getHitPoints();
+        if (this.getParalyzed() == 0) {
+            int maxLevelHp = this.getLevel() * HeroesFactory.getInstance().
+                    getHeroesByLetter(this.getLetter()).getBonusHitPoints()
+                    + HeroesFactory.getInstance().getHeroesByLetter(this.getLetter()).getHitPoints();
 
-        if (this.getHitPoints() <  maxLevelHp / Modifiers.THREE &&
-                this.getHitPoints() > maxLevelHp / Modifiers.FOUR) {
-            this.setHitPoints(this.getHitPoints() * Modifiers.THREE / Modifiers.FOUR);
-            this.setStrategy(Modifiers.GOODSTRATEGY);
-        } else if (this.getHitPoints() < maxLevelHp / Modifiers.FOUR) {
-            this.setHitPoints(this.getHitPoints() * Modifiers.FOUR / Modifiers.THREE);
-            this.setStrategy(Modifiers.BADSTRATEGY);
+            if (this.getHitPoints() < maxLevelHp / Modifiers.THREE &&
+                    this.getHitPoints() > maxLevelHp / Modifiers.FOUR) {
+                this.setHitPoints(this.getHitPoints() * Modifiers.THREE / Modifiers.FOUR);
+                this.setStrategy(Modifiers.GOODSTRATEGY);
+            } else if (this.getHitPoints() < maxLevelHp / Modifiers.FOUR) {
+                this.setHitPoints(this.getHitPoints() * Modifiers.FOUR / Modifiers.THREE);
+                this.setStrategy(Modifiers.BADSTRATEGY);
+            }
         }
         //verific daca am modificator de teren
         float mod = 1;
@@ -87,13 +89,14 @@ public class Pyromancer extends Heroes {
 
 
         //calculez hp ul ce trebuie scazut victimei
+        //System.out.println("damage este : " + );
         int result = Math.round((Modifiers.DAMAGE1 + Modifiers.DAMAGE1BONUS
-                * this.getLevel()) * this.getAngelsModifyer()
-                * this.getStrategy() * ability * mod);
+                * this.getLevel()) * this.getStrategy() * (ability
+                + this.getAngelsModifyer()) * mod);
 
         result += Math.round((Modifiers.DAMAGE2 + Modifiers.DAMAGE2BONUS
-                * this.getLevel()) * this.getAngelsModifyer()
-                * this.getStrategy() * ability * mod);
+                * this.getLevel()) * this.getStrategy() * (ability
+                + this.getAngelsModifyer())* mod);
         h.setHitPoints(h.getHitPoints() - result);
     }
 

@@ -3,10 +3,8 @@ package main;
 import angels.Angels;
 import greatwizard.GreatWizard;
 import greatwizard.ObserverGreatWizard;
-import javafx.beans.Observable;
 import map.Map;
 import players.AssociationLetterType;
-import players.Heroes;
 
 import java.util.ArrayList;
 
@@ -22,6 +20,7 @@ public final class Main {
         GreatWizard greatWizard = new GreatWizard("");
         ObserverGreatWizard observerGreatWizard = new ObserverGreatWizard(greatWizard);
         AssociationLetterType association = new AssociationLetterType();
+        String output = "";
 
         //asociez fiecarui jucator o linie si o coloana
         for (int i = 0; i < gameInput.getP(); i++) {
@@ -30,7 +29,7 @@ public final class Main {
 
         //pentru fiecare runda
         for (int i = 0; i < gameInput.getR(); i++) {
-            String output = "~~ RUNDA " + (i + 1) + " ~~";
+            output = "~~ Round " + (i + 1) + " ~~";
             greatWizard.setValue(output);
             //fiecare jucator este mutat
             for (int j = 0; j < gameInput.getP(); j++) {
@@ -75,11 +74,21 @@ public final class Main {
                         if (player1.getHero().getHitPoints() <= 0) {
                             player1.getHero().setHitPoints(0);
                             player2.getHero().setExperiencePoints(player1.getHero().getLevel());
+                            output = "Player " + association.wordByLetter(player1.getHero().getLetter())
+                                    + " " + player1.getHero().getId() + " was killed by "
+                                    + association.wordByLetter(player2.getHero().getLetter())
+                                    + " " + player2.getHero().getId();
+                            greatWizard.setValue(output);
                         }
 
                         if (player2.getHero().getHitPoints() <= 0) {
                             player2.getHero().setHitPoints(0);
                             player1.getHero().setExperiencePoints(player2.getHero().getLevel());
+                            output = "Player " + association.wordByLetter(player2.getHero().getLetter())
+                                    + " " + player2.getHero().getId() + " was killed by "
+                                    + association.wordByLetter(player1.getHero().getLetter())
+                                    + " " + player1.getHero().getId();
+                            greatWizard.setValue(output);
                         }
                         break;
                     }
@@ -89,7 +98,7 @@ public final class Main {
                 if (angel.getRound() != i){
                     continue;
                 } else {
-                    output = "Angel " + angel.getType() + " spawned at " + angel.getLine() + " " + angel.getColumn();
+                    output = "Angel " + angel.getType() + " was spawned at " + angel.getLine() + " " + angel.getColumn();
                     greatWizard.setValue(output);
                 }
                 for (Map player : playersMap) {
@@ -101,13 +110,31 @@ public final class Main {
                             + association.wordByLetter(player.getHero().getLetter())
                             + " " + player.getHero().getId();
                     greatWizard.setValue(output);
+                    if (player.getHero().getHitPoints() <= 0){
+                        output = "Player " + association.wordByLetter(player.getHero().getLetter())
+                                + " " + player.getHero().getId() + " was killed by an angel";
+                        greatWizard.setValue(output);
+                    }
                 }
             }
             greatWizard.setValue("");
+            output = "~~ Results ~~" + "\n";
+            for (Map player : playersMap) {
+                output += player.getHero().getLetter() + " ";
+                if (player.getHero().getHitPoints() <= 0) {
+                    output += "dead";
+                } else {
+                    output += player.getHero().getLevel() + " " + player.getHero().
+                            getExperiencePoints() + " " + player.getHero().getHitPoints()
+                            + " " + player.getLine() + " " + player.getColumn();
+                }
+                output += "\n";
+            }
+            System.out.println(output);
         }
 
         //pentru fiecare jucator creez out-ul
-        String output = "~~ Results ~~" + "\n";
+        output = "~~ Results ~~" + "\n";
         for (Map player : playersMap) {
             output += player.getHero().getLetter() + " ";
             if (player.getHero().getHitPoints() <= 0) {
@@ -120,7 +147,8 @@ public final class Main {
             output += "\n";
         }
         greatWizard.setValue(output);
-        input.write(output);
+        input.write(observerGreatWizard.getMessage());
+        System.out.println(observerGreatWizard.getMessage());
     }
 }
 

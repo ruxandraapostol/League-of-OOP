@@ -12,7 +12,7 @@ public class Heroes {
     private long dot1 = 0;
     private int index1 = 0; //numarul de runde pentru aplicarea dot-ului
     private int paralyzed = 0;  //numarul de runde pentru incapacitate
-    private float angelsModifyer = 1;
+    private float angelsModifyer = 0;
     private float strategy = 1;
 
     public Heroes(final int hitPoints, final int bonusHitPoints,

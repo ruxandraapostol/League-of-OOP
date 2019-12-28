@@ -133,9 +133,11 @@ public class Rogue extends Heroes {
 
         //calculez hp ul ce trebuie scazut victimei
         int result1 = Math.round((Modifiers.DAMAGE1 + Modifiers.DAMAGE1BONUS
-                * this.getLevel()) * this.getAngelsModifyer() * this.getStrategy() * backstab * mod * criticalHit);
+                * this.getLevel()) * this.getStrategy() * (backstab
+                + this.getAngelsModifyer()) * mod * criticalHit);
         int result2 = Math.round((Modifiers.DAMAGE2 + Modifiers.DAMAGE2BONUS
-                * this.getLevel()) * this.getAngelsModifyer() * this.getStrategy() * paralysis * mod);
+                * this.getLevel()) * this.getStrategy() * (paralysis
+                + this.getAngelsModifyer()) * mod);
         h.setHitPoints(h.getHitPoints() - result1 - result2);
 
     }

@@ -79,18 +79,19 @@ public class Knight extends Heroes {
         int maxLevelHp = this.getLevel() * HeroesFactory.getInstance().
                 getHeroesByLetter(this.getLetter()).getBonusHitPoints()
                 + HeroesFactory.getInstance().getHeroesByLetter(this.getLetter()).getHitPoints();
+        if(this.getParalyzed() == 0) {
+            if (this.getHitPoints() > maxLevelHp / Modifiers.THREE && this.getHitPoints() < maxLevelHp / Modifiers.TWO) {
+                this.setHitPoints((int) (this.getHitPoints() * Modifiers.GOODHP));
+                this.setStrategy(Modifiers.GOODSTRATEGY);
 
-        if (this.getHitPoints() >  maxLevelHp / Modifiers.THREE && this.getHitPoints() < maxLevelHp / Modifiers.TWO) {
-            this.setHitPoints((int) (this.getHitPoints() * Modifiers.GOODHP));
-            this.setStrategy(Modifiers.GOODSTRATEGY);
-
-        } else if (this.getHitPoints() < maxLevelHp / Modifiers.THREE) {
-            this.setHitPoints((int) (this.getHitPoints() * Modifiers.BADSHP));
-            this.setStrategy(Modifiers.BADSTRATEGY);
+            } else if (this.getHitPoints() < maxLevelHp / Modifiers.THREE) {
+                this.setHitPoints((int) (this.getHitPoints() * Modifiers.BADSHP));
+                this.setStrategy(Modifiers.BADSTRATEGY);
+            }
         }
 
         //calculez limita minima de hp
-        float conditon = (float) (Modifiers.HPPROCENT + Modifiers.BONUSPROCENT
+        float conditon = (Modifiers.HPPROCENT + Modifiers.BONUSPROCENT
                 * this.getLevel()) * (HeroesFactory.getInstance().getHeroesByLetter(
                 h.getLetter()).getHitPoints() + h.getLevel() * h.getBonusHitPoints());
 
@@ -101,15 +102,23 @@ public class Knight extends Heroes {
             //modificator de teren
             float mod = 1;
             if (s.equals("L")) {
-                mod = Modifiers.LAND;
+                mod = Modifiers.LAND ;
             }
+
             //calculez hp ul ce trebuie scazut victimei
-            int result = Math.round((Modifiers.DAMAGE1 + Modifiers.DAMAGE1BONUS
-                    * this.getLevel()) * this.getAngelsModifyer()
-                    * this.getStrategy() * execute * mod);
+            int result;
+            if(execute != 1) {
+                result = Math.round((Modifiers.DAMAGE1 + Modifiers.DAMAGE1BONUS
+                        * this.getLevel()) * this.getStrategy() * (execute
+                        + this.getAngelsModifyer()) * mod);
+            } else {
+                result = Math.round((Modifiers.DAMAGE1 + Modifiers.DAMAGE1BONUS
+                        * this.getLevel()) * this.getStrategy() * execute * mod);
+            }
+
             result += Math.round((Modifiers.DAMAGE2 + Modifiers.DAMAGE2BONUS
-                    * this.getLevel()) * this.getAngelsModifyer()
-                    * this.getStrategy() * slam * mod);
+                    * this.getLevel()) * this.getStrategy() * (slam
+                    + this.getAngelsModifyer()) * mod);
             h.setHitPoints(h.getHitPoints() - result);
 
             //setez incapacitatea

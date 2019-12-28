@@ -28,33 +28,28 @@ public class AngelsFactory {
         public static final int HPSMALLANGELP = 15;
         public static final int HPSMALLANGELR = 20;
         public static final int HPSMALLANGELW = 25;
-
-        public static final int HPSPAWNERK = 200;
-        public static final int HPSPAWNERP = 150;
-        public static final int HPSPAWNERR = 180;
-        public static final int HPSPAWNERW = 120;
     }
 
     public static class AssetDamageAngels {
-        public static final float DAMAGEDAMAGEANGELK = 1.15f;
-        public static final float DAMAGEDAMAGEANGELP = 1.2f;
-        public static final float DAMAGEDAMAGEANGELR = 1.3f;
-        public static final float DAMAGEDAMAGEANGELW = 1.4f;
+        public static final float DAMAGEDAMAGEANGELK = 0.15f;
+        public static final float DAMAGEDAMAGEANGELP = 0.2f;
+        public static final float DAMAGEDAMAGEANGELR = 0.3f;
+        public static final float DAMAGEDAMAGEANGELW = 0.4f;
 
-        public static final float DAMAGEDRACULAK = 0.8f;
-        public static final float DAMAGEDRACULAP = 0.7f;
-        public static final float DAMAGEDRACULAR = 0.9f;
-        public static final float DAMAGEDRACULAW = 0.6f;
+        public static final float DAMAGEDRACULAK = -0.2f;
+        public static final float DAMAGEDRACULAP = -0.3f;
+        public static final float DAMAGEDRACULAR = -0.1f;
+        public static final float DAMAGEDRACULAW = -0.4f;
 
-        public static final float DAMAGEGOODBOYK = 1.4f;
-        public static final float DAMAGEGOODBOYP = 1.5f;
-        public static final float DAMAGEGOODBOYR = 1.4f;
-        public static final float DAMAGEGOODBOYW = 1.3f;
+        public static final float DAMAGEGOODBOYK = 0.4f;
+        public static final float DAMAGEGOODBOYP = 0.5f;
+        public static final float DAMAGEGOODBOYR = 0.4f;
+        public static final float DAMAGEGOODBOYW = 0.3f;
 
-        public static final float DAMAGESMALLANGELK = 1.1f;
-        public static final float DAMAGESMALLANGELP = 1.15f;
-        public static final float DAMAGESMALLANGELR = 1.05f;
-        public static final float DAMAGESMALLANGELW = 1.1f;
+        public static final float DAMAGESMALLANGELK = 0.1f;
+        public static final float DAMAGESMALLANGELP = 0.15f;
+        public static final float DAMAGESMALLANGELR = 0.05f;
+        public static final float DAMAGESMALLANGELW = 0.1f;
     }
 
     public AngelsFactory() {
@@ -111,7 +106,7 @@ public class AngelsFactory {
         } else if (type.equals("TheDoomer")) {
             return new TheDoomer(type,"hit", round, line, column);
         }
-        return new XPAngel(type, "hit", round, line, column);
+        return new XPAngel(type, "helped", round, line, column);
     }
 
 }
