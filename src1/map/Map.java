@@ -30,10 +30,11 @@ public class Map {
 
     public final void move(final char move) {
         //mutarile see fac doar daca jucatorul nu e in incapacitate
-        if (hero.getParalyzed() != 0) {
+        if (hero.getParalyzed() > 1) {
             hero.setParalyzed(hero.getParalyzed() - 1);
             return;
         }
+        hero.setParalyzed(0);
         //mutarile propriu-zise
         if (move == 'L') {
             column--;

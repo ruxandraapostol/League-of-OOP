@@ -65,5 +65,7 @@ public class GameInput {
         return move;
     }
 
-    public final ArrayList<Angels> getAngels() { return angels; }
+    public final ArrayList<Angels> getAngels() {
+        return angels;
+    }
 }

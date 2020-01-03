@@ -5,11 +5,11 @@ import java.util.Observable;
 public class GreatWizard extends Observable {
     private String watchedValue;
 
-    public GreatWizard(String value) {
+    public GreatWizard(final String value) {
         watchedValue = value;
     }
 
-    public void setValue(String value) {
+    public final void setValue(final String value) {
         watchedValue = value;
         // mark as value changed
         setChanged();

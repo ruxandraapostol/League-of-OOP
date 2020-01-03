@@ -129,6 +129,7 @@ public class Heroes {
         public static final int TWOHUNDREDFIFTY = 250;
         public static final int FIFTY = 50;
         public static final int FORTY = 40;
+        public static final float  APROX = 0.0001f;
     }
 
     // setez punctele de experienta dupa formula
@@ -173,6 +174,7 @@ public class Heroes {
         } else {
             this.hitPoints = maxLevelHp;
         }
-
     }
+
+    public void chooseStrategy() {}
 }

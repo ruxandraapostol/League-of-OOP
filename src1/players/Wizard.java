@@ -16,7 +16,7 @@ public class Wizard extends Heroes {
         h.fight(this, s);
     }
 
-    public void acceptAngel (final Angels angels) {
+    public final void acceptAngel(final Angels angels) {
         angels.angelPlay(this);
     }
 
@@ -41,12 +41,33 @@ public class Wizard extends Heroes {
         public static final int ROUNDS = 3;
         public static final float CRITICAL = 1.5f;
 
-        public static final float GOODSTRATEGY = 0.5f;
+        public static final float GOODSTRATEGY = 0.6f;
         public static final float GOODHP = 10;
-        public static final float BADSTRATEGY = 0.8f;
+        public static final float BADSTRATEGY = -0.2f;
         public static final float BADHP = 5;
         public static final int TWO = 2;
         public static final int FOUR = 4;
+    }
+
+    @Override
+    public void chooseStrategy() {
+        if(this.getParalyzed() == 0){
+            AplyStrategy aplyStrategy;
+            if (this.getHitPoints() >  this.getMaxLevelHP()
+                    / Modifiers.FOUR && this.getHitPoints()
+                    < this.getMaxLevelHP() / Modifiers.TWO) {
+                aplyStrategy = new AplyStrategy(new OffenciveStrategy());
+                aplyStrategy.executeStrategy(this,
+                        Modifiers.GOODHP, Modifiers.GOODSTRATEGY);
+
+            } else if (this.getHitPoints() < this.getMaxLevelHP() / Modifiers.FOUR) {
+                aplyStrategy = new AplyStrategy(new DeffenciveStrategy());
+                aplyStrategy.executeStrategy(this,
+                        Modifiers.BADHP, Modifiers.BADSTRATEGY);
+            }
+        } else {
+            this.setStrategy(0);
+        }
     }
 
     /**
@@ -63,38 +84,22 @@ public class Wizard extends Heroes {
      */
     public final void newScore(final Heroes h, final float drain,
                                final float deflect, final String s) {
-        if(this.getParalyzed() == 1){
-            AplyStrategy aplyStrategy;
-            if (this.getHitPoints() >  this.getMaxLevelHP()
-                    / Modifiers.FOUR && this.getHitPoints() <
-                    this.getMaxLevelHP() / Modifiers.TWO) {
-                aplyStrategy = new AplyStrategy(new OffenciveStrategy());
-                aplyStrategy.executeStrategy(this,
-                        Modifiers.GOODHP, Modifiers.GOODSTRATEGY);
-
-            } else if (this.getHitPoints() < this.getMaxLevelHP() / Modifiers.FOUR) {
-                aplyStrategy = new AplyStrategy(new DeffenciveStrategy());
-                aplyStrategy.executeStrategy(this,
-                        Modifiers.BADHP, Modifiers.BADSTRATEGY);
-            }
-        } else {
-            this.setStrategy(0);
-        }
-
         //modificator de teren
         float mod = 1;
         nr++;
         if (s.equals("D")) {
             mod = Modifiers.LAND;
         }
+        /*System.out.println("Damage de strategie :" + this.getStrategy());
+        System.out.println("Damage dat de inger :" + this.getAngelsModifyer());*/
         //damage dat de drain cu formula din enunt
         int result = Math.round((Modifiers.DAMAGE1 + Modifiers.DAMAGE1BONUS
                 * this.getLevel()) * (Math.min(h.getHitPoints(), Modifiers.PROC
                 * (HeroesFactory.getInstance().getHeroesByLetter(h.getLetter()).
                 getHitPoints() + HeroesFactory.getInstance().getHeroesByLetter(
                 h.getLetter()).getBonusHitPoints() * h.getLevel())))
-                * (drain + this.getStrategy() + this.getAngelsModifyer()) * mod);
-
+                * (drain - Constants.APROX + this.getStrategy()
+                + this.getAngelsModifyer()) * mod);
         float criticalHit = 1;
         float result2 = 0;
         //calculez damage doar pentru victime ce nu sunt Wizard
@@ -111,7 +116,7 @@ public class Wizard extends Heroes {
                 }
                 result2 = ((Rogue) h).totalBackstab(criticalHit);
             }
-            result2 = Math.round(mod * (deflect + this.getStrategy()
+            result2 = Math.round(mod * (deflect - Constants.APROX + this.getStrategy()
                     + this.getAngelsModifyer()) * procent
                     * (h.totalDamage(s) + result2));
         }
@@ -119,6 +124,8 @@ public class Wizard extends Heroes {
             nr = 0;
         }
         //scad damage din viata victimei
+        System.out.println("Wizard " + this.getId() + ": drain = " +result
+                + " deflect =" + result2 + "(StratMod = " + this.getStrategy() + " AngelMod = " +this.getAngelsModifyer() + " )");
         h.setHitPoints(h.getHitPoints() - result - (int) result2);
     }
 

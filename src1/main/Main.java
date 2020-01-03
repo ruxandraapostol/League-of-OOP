@@ -41,6 +41,7 @@ public final class Main {
             //aplic dot fiecarui jucator, daca nu are va fi egal cu 0
             for (Map player1 : playersMap) {
                 player1.getHero().doT();
+                player1.getHero().chooseStrategy();
             }
 
             // pentru fiecare jucator viu
@@ -53,11 +54,10 @@ public final class Main {
                         get(player1.getLine()).charAt(player1.getColumn());
                 //verific daca ceilalti jucatori vii si pozitionati dupa el
                 for (Map player2 : playersMap) {
-                    if (player1.getHero().getId() <= player2.getHero().getId() ||
-                       player2.getHero().getHitPoints() <=0) {
+                    if (player1.getHero().getId() <= player2.getHero().getId()
+                            || player2.getHero().getHitPoints() <= 0) {
                         continue;
                     }
-                    
                     //se afla pe aceeasi pozitie cu el
                     if (player1.getColumn() == player2.getColumn()
                             && player1.getLine() == player2.getLine()) {
@@ -70,24 +70,25 @@ public final class Main {
                         int copyHPafterFight = copyHP - player1.getHero().getHitPoints();
                         player1.getHero().setHitPoints(copyHP);
                         player2.getHero().accept(player1.getHero(), pos);
-                        player1.getHero().setHitPoints(player1.getHero().getHitPoints() - copyHPafterFight);
+                        player1.getHero().setHitPoints(player1.getHero().
+                                getHitPoints() - copyHPafterFight);
 
                         if (player1.getHero() instanceof Knight) {
-                            player2.getHero().setParalyzed(1);
+                            player2.getHero().setParalyzed(2);
                         } else if (player1.getHero() instanceof Rogue) {
-                            int paralyzedIndex = 3;
-                            if(pos == "W") {
-                                paralyzedIndex = 6;
+                            int paralyzedIndex = 4;
+                            if (pos == "W") {
+                                paralyzedIndex = 7;
                             }
                             player2.getHero().setParalyzed(paralyzedIndex);
                         }
 
                         if (player2.getHero() instanceof Knight) {
-                            player1.getHero().setParalyzed(1);
+                            player1.getHero().setParalyzed(2);
                         } else if (player2.getHero() instanceof Rogue) {
-                            int paralyzedIndex = 3;
-                            if(pos == "W") {
-                                paralyzedIndex = 6;
+                            int paralyzedIndex = 4;
+                            if (pos == "W") {
+                                paralyzedIndex = 7;
                             }
                             player1.getHero().setParalyzed(paralyzedIndex);
                         }
@@ -102,9 +103,10 @@ public final class Main {
                                     + association.wordByLetter(player2.getHero().getLetter())
                                     + " " + player2.getHero().getId();
                             greatWizard.setValue(output);
-                            for(int k = level2; k < player2.getHero().getLevel(); k++){
+                            for (int k = level2; k < player2.getHero().getLevel(); k++) {
                                 output = association.wordByLetter(player2.getHero().getLetter())
-                                        + " " + player2.getHero().getId() + " reached level " + (k + 1);
+                                        + " " + player2.getHero().getId()
+                                        + " reached level " + (k + 1);
                                 greatWizard.setValue(output);
                             }
                         }
@@ -117,9 +119,10 @@ public final class Main {
                                     + association.wordByLetter(player1.getHero().getLetter())
                                     + " " + player1.getHero().getId();
                             greatWizard.setValue(output);
-                            for(int k = level1; k < player1.getHero().getLevel(); k++){
+                            for (int k = level1; k < player1.getHero().getLevel(); k++) {
                                 output = association.wordByLetter(player1.getHero().getLetter())
-                                        + " " + player1.getHero().getId() + " reached level " + (k + 1);
+                                        + " " + player1.getHero().getId()
+                                        + " reached level " + (k + 1);
                                 greatWizard.setValue(output);
                             }
                         }
@@ -131,7 +134,8 @@ public final class Main {
                 if (angel.getRound() != i){
                     continue;
                 } else {
-                    output = "Angel " + angel.getType() + " was spawned at " + angel.getLine() + " " + angel.getColumn();
+                    output = "Angel " + angel.getType() + " was spawned at "
+                            + angel.getLine() + " " + angel.getColumn();
                     greatWizard.setValue(output);
                     for (Map player : playersMap) {
                         if (angel.getLine() != player.getLine() ||
@@ -169,7 +173,7 @@ public final class Main {
                 }
             }
             greatWizard.setValue("");
-            output = "~~ Results after angel ~~" + "\n";
+            output = "~~ Results " + (i+1)+ " ~~ \n";
             for (Map player : playersMap) {
                 output += player.getHero().getLetter() + " ";
                 if (player.getHero().getHitPoints() <= 0) {
@@ -199,7 +203,7 @@ public final class Main {
         }
         greatWizard.setValue(output);
         input.write(observerGreatWizard.getMessage());
-        System.out.println(observerGreatWizard.getMessage());
+        //System.out.println(observerGreatWizard.getMessage());
     }
 }
 

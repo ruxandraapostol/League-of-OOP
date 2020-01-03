@@ -16,7 +16,7 @@ public class Rogue extends Heroes {
         h.fight(this, s);
     }
 
-    public void acceptAngel (final Angels angels) {
+    public final void acceptAngel (final Angels angels)  {
         angels.angelPlay(this);
     }
 
@@ -83,21 +83,9 @@ public class Rogue extends Heroes {
         return (int) Math.round((Modifiers.DAMAGE1 + Modifiers.DAMAGE1BONUS
                 * this.getLevel()) * mod * criticalHit);
     }
-    /**
-     * Calculez damage-ul dat si il scad din hp-ul victimei.
-     * Verific daca trepuie sa modific Dot-ul victime, tinand cont de
-     * modificatorii de rasa si de teren. De asemenea, vad daca trebuie
-     * dat critical hit
-     * @param h reprezinta victima
-     * @param backstab modificatorul de rasa ce trebuie aplicat pentru
-     *                 abilitatea backstab
-     * @param paralysis modificatorul de rasa ce trebuie aplicat pentru
-     *                  abilitatea paralysis
-     * @param s suprafata de teren
-     */
-    public final void newScore(final Heroes h,
-              final float backstab, final float paralysis, final String s) {
-        if (h.getParalyzed() == 0) {
+    @Override
+    public void chooseStrategy(){
+        if (this.getParalyzed() == 0) {
             AplyStrategy aplyStrategy;
             if (this.getHitPoints() > this.getMaxLevelHP()
                     / Modifiers.SEVEN && this.getHitPoints()
@@ -113,6 +101,22 @@ public class Rogue extends Heroes {
                         Modifiers.BADHP, Modifiers.BADSTRATEGY);
             }
         }
+    }
+    /**
+     * Calculez damage-ul dat si il scad din hp-ul victimei.
+     * Verific daca trepuie sa modific Dot-ul victime, tinand cont de
+     * modificatorii de rasa si de teren. De asemenea, vad daca trebuie
+     * dat critical hit
+     * @param h reprezinta victima
+     * @param backstab modificatorul de rasa ce trebuie aplicat pentru
+     *                 abilitatea backstab
+     * @param paralysis modificatorul de rasa ce trebuie aplicat pentru
+     *                  abilitatea paralysis
+     * @param s suprafata de teren
+     */
+    public final void newScore(final Heroes h,
+              final float backstab, final float paralysis, final String s) {
+        System.out.println("jucatorul rogue " + this.getId() + " are hp :" + this.getHitPoints());
         nr++;
         float mod = 1;
         float criticalHit = 1;
@@ -122,25 +126,27 @@ public class Rogue extends Heroes {
         if (s.equals("W")) {
             mod = Modifiers.LAND;
             h.setDot1(Math.round((Modifiers.DOT + Modifiers.BONUS * this.getLevel())
-                    * mod * paralysis), 2 * Modifiers.INDEX);
+                    * mod * (paralysis  + this.getAngelsModifyer() + this.getStrategy())), 2 * Modifiers.INDEX);
             if (nr == Modifiers.INDEX) {
                 criticalHit = Modifiers.CRITICAL;
                 nr = 0;
             }
         } else {
             h.setDot1(Math.round((Modifiers.DOT + Modifiers.BONUS * this.getLevel())
-                    * mod * paralysis), Modifiers.INDEX);
+                    * mod * (paralysis  + this.getAngelsModifyer() + this.getStrategy())), Modifiers.INDEX);
             if (nr == Modifiers.INDEX) {
                 nr = 0;
             }
         }
-
+        System.out.println("Damage de strategie :" + this.getStrategy());
+        System.out.println("Damage dat de inger :" + this.getAngelsModifyer());
+        System.out.println("Damage dat de teren :" + mod);
         //calculez hp ul ce trebuie scazut victimei
         int result1 = Math.round((Modifiers.DAMAGE1 + Modifiers.DAMAGE1BONUS
-                * this.getLevel()) * (backstab + this.getStrategy()
+                * this.getLevel()) * (backstab - Constants.APROX + this.getStrategy()
                 + this.getAngelsModifyer()) * mod * criticalHit);
         int result2 = Math.round((Modifiers.DAMAGE2 + Modifiers.DAMAGE2BONUS
-                * this.getLevel()) * (paralysis + this.getStrategy()
+                * this.getLevel()) * (paralysis - Constants.APROX + this.getStrategy()
                 + this.getAngelsModifyer()) * mod);
         h.setHitPoints(h.getHitPoints() - result1 - result2);
 

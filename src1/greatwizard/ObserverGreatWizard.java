@@ -6,16 +6,23 @@ import java.util.Observer;
 public class ObserverGreatWizard implements Observer {
     private String message = "";
 
-    public ObserverGreatWizard(GreatWizard greatWizard){
+    public ObserverGreatWizard(final GreatWizard greatWizard) {
         greatWizard.addObserver(this::update);
     }
+
+    /**
+     * In acest fel la fiecare actualizare mesajul va
+     * fi modificat corespunzator.
+     * @param observable = cei care sunt observati
+     * @param o = noul mesaj
+     */
     @Override
-    public void update(Observable observable, Object o) {
+    public void update(final Observable observable, final Object o) {
         message += o;
         message += "\n";
     }
 
-    public String getMessage(){
+    public final String getMessage() {
         return this.message;
     }
 }

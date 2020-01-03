@@ -58,43 +58,43 @@ public class AngelsFactory {
     }
 
     public static AngelsFactory getAngelInstance() {
-        if(instance == null) {
+        if (instance == null) {
             instance = new AngelsFactory();
         }
         return instance;
     }
 
     public final Angels getAngelsByType(final String type,
-               final int line, final int column, final int round ) {
+               final int line, final int column, final int round) {
         if (type.equals("DamageAngel")) {
-            return new Angels(type,"helped", round, line, column, 0, 0 ,
-                    0 ,0 , AssetDamageAngels.DAMAGEDAMAGEANGELK,
+            return new Angels(type, "helped", round, line, column, 0, 0,
+                    0, 0, AssetDamageAngels.DAMAGEDAMAGEANGELK,
                     AssetDamageAngels.DAMAGEDAMAGEANGELP, AssetDamageAngels.
                     DAMAGEDAMAGEANGELR, AssetDamageAngels.DAMAGEDAMAGEANGELW);
         } else if (type.equals("DarkAngel")) {
-            return new Angels(type,"hit", round, line, column, AssetHpAngels.
+            return new Angels(type, "hit", round, line, column, AssetHpAngels.
                     HPDARKANGELK, AssetHpAngels.HPDARKANGELP, AssetHpAngels.
                     HPDARKANGELR, AssetHpAngels.HPDARKANGELW, 0,
-                    0 ,0 ,0);
+                    0, 0, 0);
         } else if (type.equals("Dracula")) {
-            return new Angels(type,"hit", round, line, column, AssetHpAngels.
+            return new Angels(type, "hit", round, line, column, AssetHpAngels.
                     HPDRACULAK, AssetHpAngels.HPDRACULAP, AssetHpAngels.
                     HPDRACULAR, AssetHpAngels.HPDRACULAW, AssetDamageAngels.
                     DAMAGEDRACULAK, AssetDamageAngels.DAMAGEDRACULAP,
                     AssetDamageAngels.DAMAGEDRACULAR, AssetDamageAngels.DAMAGEDRACULAW);
         } else if (type.equals("GoodBoy")) {
-            return new Angels(type,"helped", round, line, column, AssetHpAngels.
+            return new Angels(type, "helped", round, line, column, AssetHpAngels.
                     HPGOODBOYK, AssetHpAngels.HPGOODBOYP, AssetHpAngels.
                     HPGOODBOYR, AssetHpAngels.HPGOODBOYW, AssetDamageAngels.
                     DAMAGEGOODBOYK, AssetDamageAngels.DAMAGEGOODBOYP,
                     AssetDamageAngels.DAMAGEGOODBOYR, AssetDamageAngels.DAMAGEGOODBOYW);
         } else if (type.equals("LevelUpAngel")) {
-            return new LevelUpAngel(type,"helped", round, line, column);
+            return new LevelUpAngel(type, "helped", round, line, column);
         }  else if (type.equals("LifeGiver")) {
-            return new Angels(type,"helped", round, line, column, AssetHpAngels.
+            return new Angels(type, "helped", round, line, column, AssetHpAngels.
                     HPLIFEGIVERK, AssetHpAngels.HPLIFEGIVERP, AssetHpAngels.
                     HPLIFEGIVERR, AssetHpAngels.HPLIFEGIVERW, 0,
-                    0 ,0 ,0);
+                    0, 0, 0);
         } else if (type.equals("SmallAngel")) {
             return new Angels(type, "helped", round, line, column, AssetHpAngels.
                     HPSMALLANGELK, AssetHpAngels.HPSMALLANGELP, AssetHpAngels.
@@ -104,7 +104,7 @@ public class AngelsFactory {
         } else if (type.equals("Spawner")) {
             return new Spawner(type, "helped", round, line, column);
         } else if (type.equals("TheDoomer")) {
-            return new TheDoomer(type,"hit", round, line, column);
+            return new TheDoomer(type, "hit", round, line, column);
         }
         return new XPAngel(type, "helped", round, line, column);
     }

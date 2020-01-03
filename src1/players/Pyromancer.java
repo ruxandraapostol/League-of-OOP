@@ -15,7 +15,7 @@ public class Pyromancer extends Heroes {
         h.fight(this, s);
     }
 
-    public void acceptAngel (final Angels angels) {
+    public final void acceptAngel(final Angels angels) {
         angels.angelPlay(this);
     }
 
@@ -38,6 +38,22 @@ public class Pyromancer extends Heroes {
         public static final float BADSTRATEGY = -0.3f;
         public static final int  THREE = 3;
         public static final int FOUR = 4;
+    }
+    @Override
+    public void chooseStrategy() {
+        if (this.getParalyzed() == 0) {
+            AplyStrategy aplyStrategy;
+            if (this.getHitPoints() < this.getMaxLevelHP() / Modifiers.THREE &&
+                    this.getHitPoints() > this.getMaxLevelHP() / Modifiers.FOUR) {
+                aplyStrategy = new AplyStrategy(new OffenciveStrategy());
+                aplyStrategy.executeStrategy(this,
+                        Modifiers.FOUR, Modifiers.GOODSTRATEGY);
+            } else if (this.getHitPoints() < this.getMaxLevelHP() / Modifiers.FOUR) {
+                aplyStrategy = new AplyStrategy(new DeffenciveStrategy());
+                aplyStrategy.executeStrategy(this,
+                        Modifiers.THREE, Modifiers.BADSTRATEGY);
+            }
+        }
     }
 
     /**
@@ -67,39 +83,32 @@ public class Pyromancer extends Heroes {
      * @param s suprafata de teren
      */
     public final void newScore(final Heroes h, float ability, final String s) {
-        if (this.getParalyzed() == 0) {
-            AplyStrategy aplyStrategy;
-            if (this.getHitPoints() < this.getMaxLevelHP() / Modifiers.THREE &&
-                    this.getHitPoints() > this.getMaxLevelHP() / Modifiers.FOUR) {
-                aplyStrategy = new AplyStrategy(new OffenciveStrategy());
-                aplyStrategy.executeStrategy(this,
-                        Modifiers.FOUR, Modifiers.GOODSTRATEGY);
-            } else if (this.getHitPoints() < this.getMaxLevelHP() / Modifiers.FOUR) {
-                aplyStrategy = new AplyStrategy(new DeffenciveStrategy());
-                aplyStrategy.executeStrategy(this,
-                        Modifiers.THREE, Modifiers.BADSTRATEGY);
-            }
-        }
+        System.out.println("jucatorul pyro " + this.getId() + " are hp :" + this.getHitPoints());
+
         //verific daca am modificator de teren
         float mod = 1;
         if (s.equals("V")) {
             mod = Modifiers.LAND;
         }
-
+        System.out.println("Damage de strategie :" + this.getStrategy());
+        System.out.println("Damage dat de inger :" + this.getAngelsModifyer());
+        System.out.println("Damage dat de teren :" + mod);
         //dau Dot
-        h.setDot1(Math.round(Math.round((Modifiers.DOT + Modifiers.BONUS * this.getLevel())
-                * mod) * ability), Modifiers.INDEX);
+        h.setDot1(Math.round(Math.round((Modifiers.DOT
+                + Modifiers.BONUS * this.getLevel()) * mod)
+                * (ability - Constants.APROX + this.getAngelsModifyer()
+                + this.getStrategy())), Modifiers.INDEX);
 
 
         //calculez hp ul ce trebuie scazut victimei
         //System.out.println("damage este : " + );
         int result = Math.round(Math.round((Modifiers.DAMAGE1 + Modifiers.DAMAGE1BONUS
                 * this.getLevel()) * mod ) * (ability +  this.getStrategy()
-                + this.getAngelsModifyer()));
+                - Constants.APROX + this.getAngelsModifyer()));
 
         result += Math.round(Math.round((Modifiers.DAMAGE2 + Modifiers.DAMAGE2BONUS
                 * this.getLevel()) * mod) * (ability + this.getStrategy()
-                + this.getAngelsModifyer()));
+                - Constants.APROX + this.getAngelsModifyer()));
         h.setHitPoints(h.getHitPoints() - result);
     }
 

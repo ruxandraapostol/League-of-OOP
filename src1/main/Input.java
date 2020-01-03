@@ -5,10 +5,7 @@ import angels.AngelsFactory;
 import fileio.FileSystem;
 
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.StringTokenizer;
 
 public class Input {
     public static final int CONSTANT = 3;
@@ -49,9 +46,9 @@ public class Input {
                 for (int j = 0; j < nrAngels; j++) {
                     String angel = fs.nextWord();
                     String[] angelList = angel.split(",");
-                    angels.add(AngelsFactory.getAngelInstance().getAngelsByType
-                        (angelList[0], Integer.parseInt(angelList[1]),
-                                Integer.parseInt(angelList[2]), i));
+                    angels.add(AngelsFactory.getAngelInstance().getAngelsByType(
+                    angelList[0], Integer.parseInt(angelList[1]),
+                            Integer.parseInt(angelList[2]), i));
                 }
             }
             fs.close();
