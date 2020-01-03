@@ -5,6 +5,8 @@ import greatwizard.GreatWizard;
 import greatwizard.ObserverGreatWizard;
 import map.Map;
 import players.AssociationLetterType;
+import players.Knight;
+import players.Rogue;
 
 import java.util.ArrayList;
 
@@ -51,12 +53,11 @@ public final class Main {
                         get(player1.getLine()).charAt(player1.getColumn());
                 //verific daca ceilalti jucatori vii si pozitionati dupa el
                 for (Map player2 : playersMap) {
-                    if (player1.getHero().getId() <= player2.getHero().getId()) {
+                    if (player1.getHero().getId() <= player2.getHero().getId() ||
+                       player2.getHero().getHitPoints() <=0) {
                         continue;
                     }
-                    if (player2.getHero().getHitPoints() <= 0) {
-                        continue;
-                    }
+                    
                     //se afla pe aceeasi pozitie cu el
                     if (player1.getColumn() == player2.getColumn()
                             && player1.getLine() == player2.getLine()) {
@@ -71,6 +72,25 @@ public final class Main {
                         player2.getHero().accept(player1.getHero(), pos);
                         player1.getHero().setHitPoints(player1.getHero().getHitPoints() - copyHPafterFight);
 
+                        if (player1.getHero() instanceof Knight) {
+                            player2.getHero().setParalyzed(1);
+                        } else if (player1.getHero() instanceof Rogue) {
+                            int paralyzedIndex = 3;
+                            if(pos == "W") {
+                                paralyzedIndex = 6;
+                            }
+                            player2.getHero().setParalyzed(paralyzedIndex);
+                        }
+
+                        if (player2.getHero() instanceof Knight) {
+                            player1.getHero().setParalyzed(1);
+                        } else if (player2.getHero() instanceof Rogue) {
+                            int paralyzedIndex = 3;
+                            if(pos == "W") {
+                                paralyzedIndex = 6;
+                            }
+                            player1.getHero().setParalyzed(paralyzedIndex);
+                        }
 
                         //daca vreunul din ei a murit i se dau punctele de experienta
                         //celuilalt, respectiv nivelul, dupa caz
@@ -89,7 +109,7 @@ public final class Main {
                             }
                         }
 
-                        if (player2.getHero().getHitPoints() <= 0) {
+                        if (player2.getHero().getHitPoints() <= 0 ) {
                             player2.getHero().setHitPoints(0);
                             player1.getHero().setExperiencePoints(player2.getHero().getLevel());
                             output = "Player " + association.wordByLetter(player2.getHero().getLetter())
@@ -107,19 +127,6 @@ public final class Main {
                     }
                 }
             }
-           /* output = "~~ Results before angel ~~" + "\n";
-            for (Map player : playersMap) {
-                output += player.getHero().getLetter() + " ";
-                if (player.getHero().getHitPoints() <= 0) {
-                    output += "dead";
-                } else {
-                    output += player.getHero().getLevel() + " " + player.getHero().
-                            getExperiencePoints() + " " + player.getHero().getHitPoints()
-                            + " " + player.getLine() + " " + player.getColumn();
-                }
-                output += "\n";
-            }
-            System.out.println(output);*/
             for (Angels angel : gameInput.getAngels()){
                 if (angel.getRound() != i){
                     continue;
@@ -127,10 +134,14 @@ public final class Main {
                     output = "Angel " + angel.getType() + " was spawned at " + angel.getLine() + " " + angel.getColumn();
                     greatWizard.setValue(output);
                     for (Map player : playersMap) {
-                        if (angel.getLine() != player.getLine()) {
+                        if (angel.getLine() != player.getLine() ||
+                                angel.getColumn() != player.getColumn()) {
                             continue;
                         }
-                        if (player.getHero().getHitPoints() <= 0 && !angel.getType().equals("Spawer")) {
+                        if ((player.getHero().getHitPoints() <= 0 &&
+                                !angel.getType().equals("Spawner"))
+                                || (player.getHero().getHitPoints() > 0 &&
+                                angel.getType().equals("Spawner"))) {
                             continue;
                         }
                         int level = player.getHero().getLevel();
@@ -139,6 +150,11 @@ public final class Main {
                                 + association.wordByLetter(player.getHero().getLetter())
                                 + " " + player.getHero().getId();
                         greatWizard.setValue(output);
+                        if (angel.getType().equals("Spawner")){
+                            output = "Player " + association.wordByLetter(player.getHero().getLetter())
+                                    + " " + player.getHero().getId() + "  was brought to life by an angel";
+                            greatWizard.setValue(output);
+                        }
                         for (int k = level; k < player.getHero().getLevel(); k++) {
                             output = association.wordByLetter(player.getHero().getLetter())
                                     + " " + player.getHero().getId() + " reached level " + (k + 1);

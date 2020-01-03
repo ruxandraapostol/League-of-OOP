@@ -1,6 +1,9 @@
 package players;
 
 import angels.Angels;
+import strategy.AplyStrategy;
+import strategy.DeffenciveStrategy;
+import strategy.OffenciveStrategy;
 
 public class Knight extends Heroes {
     public Knight(final int hitPoints, final int bonusHitPoints,
@@ -76,17 +79,20 @@ public class Knight extends Heroes {
      */
     public final void newScore(final Heroes h, float execute,
                                 float slam, final String s) {
-        int maxLevelHp = this.getLevel() * HeroesFactory.getInstance().
-                getHeroesByLetter(this.getLetter()).getBonusHitPoints()
-                + HeroesFactory.getInstance().getHeroesByLetter(this.getLetter()).getHitPoints();
+        AplyStrategy aplyStrategy;
         if(this.getParalyzed() == 0) {
-            if (this.getHitPoints() > maxLevelHp / Modifiers.THREE && this.getHitPoints() < maxLevelHp / Modifiers.TWO) {
-                this.setHitPoints((int) (this.getHitPoints() * Modifiers.GOODHP));
-                this.setStrategy(Modifiers.GOODSTRATEGY);
+            if (this.getHitPoints() > this.getMaxLevelHP()
+                    / Modifiers.THREE && this.getHitPoints() <
+                    this.getMaxLevelHP() / Modifiers.TWO) {
+                aplyStrategy = new AplyStrategy(new OffenciveStrategy());
+                aplyStrategy.executeStrategy(this,
+                        Modifiers.GOODHP, Modifiers.GOODSTRATEGY);
 
-            } else if (this.getHitPoints() < maxLevelHp / Modifiers.THREE) {
-                this.setHitPoints((int) (this.getHitPoints() * Modifiers.BADSHP));
-                this.setStrategy(Modifiers.BADSTRATEGY);
+            } else if (this.getHitPoints() < this.getMaxLevelHP()
+                    / Modifiers.THREE) {
+                aplyStrategy = new AplyStrategy(new DeffenciveStrategy());
+                aplyStrategy.executeStrategy(this,
+                        Modifiers.BADSHP, Modifiers.BADSTRATEGY);
             }
         }
 
@@ -122,7 +128,6 @@ public class Knight extends Heroes {
             h.setHitPoints(h.getHitPoints() - result);
 
             //setez incapacitatea
-            h.setParalyzed(1);
             h.setDot1(0, 0);
         }
     }

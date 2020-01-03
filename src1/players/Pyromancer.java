@@ -1,6 +1,9 @@
 package players;
 
 import angels.Angels;
+import strategy.AplyStrategy;
+import strategy.DeffenciveStrategy;
+import strategy.OffenciveStrategy;
 
 public class Pyromancer extends Heroes {
     public Pyromancer(final int hitPoints, final int bonusHitPoints,
@@ -65,17 +68,16 @@ public class Pyromancer extends Heroes {
      */
     public final void newScore(final Heroes h, float ability, final String s) {
         if (this.getParalyzed() == 0) {
-            int maxLevelHp = this.getLevel() * HeroesFactory.getInstance().
-                    getHeroesByLetter(this.getLetter()).getBonusHitPoints()
-                    + HeroesFactory.getInstance().getHeroesByLetter(this.getLetter()).getHitPoints();
-
-            if (this.getHitPoints() < maxLevelHp / Modifiers.THREE &&
-                    this.getHitPoints() > maxLevelHp / Modifiers.FOUR) {
-                this.setHitPoints(this.getHitPoints() * Modifiers.THREE / Modifiers.FOUR);
-                this.setStrategy(Modifiers.GOODSTRATEGY);
-            } else if (this.getHitPoints() < maxLevelHp / Modifiers.FOUR) {
-                this.setHitPoints(this.getHitPoints() * Modifiers.FOUR / Modifiers.THREE);
-                this.setStrategy(Modifiers.BADSTRATEGY);
+            AplyStrategy aplyStrategy;
+            if (this.getHitPoints() < this.getMaxLevelHP() / Modifiers.THREE &&
+                    this.getHitPoints() > this.getMaxLevelHP() / Modifiers.FOUR) {
+                aplyStrategy = new AplyStrategy(new OffenciveStrategy());
+                aplyStrategy.executeStrategy(this,
+                        Modifiers.FOUR, Modifiers.GOODSTRATEGY);
+            } else if (this.getHitPoints() < this.getMaxLevelHP() / Modifiers.FOUR) {
+                aplyStrategy = new AplyStrategy(new DeffenciveStrategy());
+                aplyStrategy.executeStrategy(this,
+                        Modifiers.THREE, Modifiers.BADSTRATEGY);
             }
         }
         //verific daca am modificator de teren

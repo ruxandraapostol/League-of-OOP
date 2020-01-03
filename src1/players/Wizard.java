@@ -1,6 +1,9 @@
 package players;
 
 import angels.Angels;
+import strategy.AplyStrategy;
+import strategy.DeffenciveStrategy;
+import strategy.OffenciveStrategy;
 
 public class Wizard extends Heroes {
     private int nr = 2; // verific daca e runda de criticalHit
@@ -39,9 +42,9 @@ public class Wizard extends Heroes {
         public static final float CRITICAL = 1.5f;
 
         public static final float GOODSTRATEGY = 0.5f;
-        public static final float GOODHP = -0.1f;
+        public static final float GOODHP = 10;
         public static final float BADSTRATEGY = 0.8f;
-        public static final float BADHP = 1.2f;
+        public static final float BADHP = 5;
         public static final int TWO = 2;
         public static final int FOUR = 4;
     }
@@ -60,18 +63,22 @@ public class Wizard extends Heroes {
      */
     public final void newScore(final Heroes h, final float drain,
                                final float deflect, final String s) {
+        if(this.getParalyzed() == 1){
+            AplyStrategy aplyStrategy;
+            if (this.getHitPoints() >  this.getMaxLevelHP()
+                    / Modifiers.FOUR && this.getHitPoints() <
+                    this.getMaxLevelHP() / Modifiers.TWO) {
+                aplyStrategy = new AplyStrategy(new OffenciveStrategy());
+                aplyStrategy.executeStrategy(this,
+                        Modifiers.GOODHP, Modifiers.GOODSTRATEGY);
 
-        int maxLevelHp = this.getLevel() * HeroesFactory.getInstance().
-                getHeroesByLetter(this.getLetter()).getBonusHitPoints()
-                + HeroesFactory.getInstance().getHeroesByLetter(this.getLetter()).getHitPoints();
-
-        if (this.getHitPoints() >  maxLevelHp / Modifiers.FOUR && this.getHitPoints() < maxLevelHp / Modifiers.TWO) {
-            this.setHitPoints((int) (this.getHitPoints() * Modifiers.GOODHP));
-            this.setStrategy(Modifiers.GOODSTRATEGY);
-
-        } else if (this.getHitPoints() < maxLevelHp / Modifiers.FOUR) {
-            this.setHitPoints((int) (this.getHitPoints() * Modifiers.BADHP));
-            this.setStrategy(Modifiers.BADSTRATEGY);
+            } else if (this.getHitPoints() < this.getMaxLevelHP() / Modifiers.FOUR) {
+                aplyStrategy = new AplyStrategy(new DeffenciveStrategy());
+                aplyStrategy.executeStrategy(this,
+                        Modifiers.BADHP, Modifiers.BADSTRATEGY);
+            }
+        } else {
+            this.setStrategy(0);
         }
 
         //modificator de teren

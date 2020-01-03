@@ -107,6 +107,13 @@ public class Heroes {
 
     public final float getStrategy() { return  this.strategy; }
 
+    public final int getMaxLevelHP() {
+        return this.getLevel() * HeroesFactory.getInstance().
+        getHeroesByLetter(this.getLetter()).getBonusHitPoints()
+        + HeroesFactory.getInstance().getHeroesByLetter(
+                this.getLetter()).getHitPoints();
+    }
+
     public final void setStrategy(final float strategy) { this.strategy = strategy; }
 
     public final void setId(final int id) {
@@ -126,6 +133,9 @@ public class Heroes {
 
     // setez punctele de experienta dupa formula
     public final void setExperiencePoints(final int loserLevel) {
+        if (this.hitPoints <= 0 ){
+            return;
+        }
         int x = Constants.TWOHUNDRED - (level - loserLevel) * Constants.FORTY;
         this.experiencePoints += Math.max(0, x);
         if (this.experiencePoints >= Constants.TWOHUNDREDFIFTY
