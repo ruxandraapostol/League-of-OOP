@@ -123,9 +123,7 @@ public class Wizard extends Heroes {
         if (nr == Modifiers.ROUNDS) {
             nr = 0;
         }
-        //scad damage din viata victimei
-        System.out.println("Wizard " + this.getId() + ": drain = " +result
-                + " deflect =" + result2 + "(StratMod = " + this.getStrategy() + " AngelMod = " +this.getAngelsModifyer() + " )");
+        //scad damage din viata victime
         h.setHitPoints(h.getHitPoints() - result - (int) result2);
     }
 

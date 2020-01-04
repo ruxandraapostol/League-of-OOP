@@ -99,22 +99,6 @@ public class Knight extends Heroes {
      */
     public final void newScore(final Heroes h, float execute,
                                 float slam, final String s) {
-        AplyStrategy aplyStrategy;
-        if(this.getParalyzed() == 0) {
-            if (this.getHitPoints() > this.getMaxLevelHP()
-                    / Modifiers.THREE && this.getHitPoints() <
-                    this.getMaxLevelHP() / Modifiers.TWO) {
-                aplyStrategy = new AplyStrategy(new OffenciveStrategy());
-                aplyStrategy.executeStrategy(this,
-                        Modifiers.GOODHP, Modifiers.GOODSTRATEGY);
-
-            } else if (this.getHitPoints() < this.getMaxLevelHP()
-                    / Modifiers.THREE) {
-                aplyStrategy = new AplyStrategy(new DeffenciveStrategy());
-                aplyStrategy.executeStrategy(this,
-                        Modifiers.BADSHP, Modifiers.BADSTRATEGY);
-            }
-        }
         //calculez limita minima de hp
         float conditon = (Modifiers.HPPROCENT + Modifiers.BONUSPROCENT
                 * this.getLevel()) * (HeroesFactory.getInstance().getHeroesByLetter(
@@ -134,22 +118,17 @@ public class Knight extends Heroes {
             if(execute != 1) {
                 result = Math.round((Modifiers.DAMAGE1 + Modifiers.DAMAGE1BONUS
                         * this.getLevel()) * (execute + this.getStrategy()
-                        - Constants.APROX + this.getAngelsModifyer()) * mod);
+                        + Constants.APROX + this.getAngelsModifyer()) * mod);
             } else {
                 result = Math.round((Modifiers.DAMAGE1 + Modifiers.DAMAGE1BONUS
                         * this.getLevel()) * (execute + this.getStrategy()) * mod);
 
             }
-            int a= result;
             result += Math.round((Modifiers.DAMAGE2 + Modifiers.DAMAGE2BONUS
                     * this.getLevel()) * (slam + this.getAngelsModifyer()
-                    - Constants.APROX + this.getStrategy()) * mod);
-            System.out.println( "Knight " + this.getId() + ": execute = " + a
-                    + " slam =" + (result - a) + "(StratMod = " + this.getStrategy() + " AngelMod = " +this.getAngelsModifyer() + " )");
+                    + Constants.APROX + this.getStrategy()) * mod);
             h.setHitPoints(h.getHitPoints() - result);
-
-            //setez incapacitatea
-            h.setDot1(0, 0);
+            h.setParalyzed(Modifiers.TWO);
         }
     }
 

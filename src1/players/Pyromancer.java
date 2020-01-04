@@ -83,16 +83,11 @@ public class Pyromancer extends Heroes {
      * @param s suprafata de teren
      */
     public final void newScore(final Heroes h, float ability, final String s) {
-        System.out.println("jucatorul pyro " + this.getId() + " are hp :" + this.getHitPoints());
-
         //verific daca am modificator de teren
         float mod = 1;
         if (s.equals("V")) {
             mod = Modifiers.LAND;
         }
-        System.out.println("Damage de strategie :" + this.getStrategy());
-        System.out.println("Damage dat de inger :" + this.getAngelsModifyer());
-        System.out.println("Damage dat de teren :" + mod);
         //dau Dot
         h.setDot1(Math.round(Math.round((Modifiers.DOT
                 + Modifiers.BONUS * this.getLevel()) * mod)

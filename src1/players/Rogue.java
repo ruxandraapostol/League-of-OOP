@@ -48,6 +48,7 @@ public class Rogue extends Heroes {
         public static final int SEVEN = 7;
         public static final int FIVE = 5;
 
+
     }
 
     /**
@@ -116,7 +117,6 @@ public class Rogue extends Heroes {
      */
     public final void newScore(final Heroes h,
               final float backstab, final float paralysis, final String s) {
-        System.out.println("jucatorul rogue " + this.getId() + " are hp :" + this.getHitPoints());
         nr++;
         float mod = 1;
         float criticalHit = 1;
@@ -138,9 +138,6 @@ public class Rogue extends Heroes {
                 nr = 0;
             }
         }
-        System.out.println("Damage de strategie :" + this.getStrategy());
-        System.out.println("Damage dat de inger :" + this.getAngelsModifyer());
-        System.out.println("Damage dat de teren :" + mod);
         //calculez hp ul ce trebuie scazut victimei
         int result1 = Math.round((Modifiers.DAMAGE1 + Modifiers.DAMAGE1BONUS
                 * this.getLevel()) * (backstab - Constants.APROX + this.getStrategy()
@@ -149,6 +146,11 @@ public class Rogue extends Heroes {
                 * this.getLevel()) * (paralysis - Constants.APROX + this.getStrategy()
                 + this.getAngelsModifyer()) * mod);
         h.setHitPoints(h.getHitPoints() - result1 - result2);
+        if(mod != 1){
+            h.setParalyzed(Modifiers.INDEX + 1);
+        } else {
+            h.setParalyzed(Modifiers.SEVEN);
+        }
 
     }
 

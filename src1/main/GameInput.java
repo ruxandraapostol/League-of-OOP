@@ -68,4 +68,12 @@ public class GameInput {
     public final ArrayList<Angels> getAngels() {
         return angels;
     }
+
+    public final int getN() {
+        return n;
+    }
+
+    public final int getM() {
+        return m;
+    }
 }
