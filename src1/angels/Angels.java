@@ -87,6 +87,7 @@ public class Angels {
     public void angelPlay(final Wizard wizard) {
         angelPower(wizard, this.hpW, this.damageW);
     }
+
     /**
      * In functie de jucatorul cu care interactioneaza
      * ingerul foloseste anumiti modificatori.

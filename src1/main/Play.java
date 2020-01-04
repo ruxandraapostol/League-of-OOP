@@ -4,26 +4,29 @@ import angels.Angels;
 import greatwizard.GreatWizard;
 import greatwizard.ObserverGreatWizard;
 import map.HeroOnMap;
+import map.SingletonMap;
 import players.AssociationLetterType;
 
 import java.util.ArrayList;
 
 public class Play {
-    Input input;
-    GameInput gameInput;
-    ArrayList<HeroOnMap> playersMap = new ArrayList<>();
-    GreatWizard greatWizard = new GreatWizard("");
-    ObserverGreatWizard observerGreatWizard = new ObserverGreatWizard(greatWizard);
-    AssociationLetterType association = new AssociationLetterType();
-    String output = "";
+    private Input input;
+    private GameInput gameInput;
+    private ArrayList<HeroOnMap> playersMap = new ArrayList<>();
+    private GreatWizard greatWizard = new GreatWizard("");
+    private ObserverGreatWizard observerGreatWizard = new ObserverGreatWizard(greatWizard);
+    private AssociationLetterType association = new AssociationLetterType();
+    private String output = "";
+    private SingletonMap map;
 
-    public Play(Input input) {
+    public Play(final Input input) {
         this.input = input;
         gameInput = input.load();
         //asociez fiecarui jucator o pozitie pe harta
         for (int i = 0; i < gameInput.getP(); i++) {
             playersMap.add(new HeroOnMap(gameInput.getPlayers()[i], i));
         }
+        map = SingletonMap.getInstance(gameInput.getMap());
     }
 
     public final void beforeTheRound(final int i) {
@@ -42,14 +45,14 @@ public class Play {
     }
 
     //afisare mesaj de omorat sau readus la viata de un inger
-    private final void message (final HeroOnMap player, final String message){
+    private void message(final HeroOnMap player, final String message) {
         output = "Player " + association.wordByLetter(player.getHero().getLetter())
                 + " " + player.getHero().getId() + message;
         greatWizard.setValue(output);
     }
 
     //afisare mesaj de crestere in nivel
-    private final void nextLevel(final int oldLevel, final HeroOnMap player){
+    private void nextLevel(final int oldLevel, final HeroOnMap player) {
         for (int k = oldLevel; k < player.getHero().getLevel(); k++) {
             output = association.wordByLetter(player.getHero().getLetter())
                     + " " + player.getHero().getId() + " reached level " + (k + 1);
@@ -57,8 +60,8 @@ public class Play {
         }
     }
 
-    private final void deadPlayer (final HeroOnMap player1,
-            final HeroOnMap player2, final int level) {
+    private void deadPlayer(final HeroOnMap player1,
+          final HeroOnMap player2, final int level) {
         //daca un jucator a fost omorat
         if (player1.getHero().getHitPoints() <= 0) {
             player1.getHero().setHitPoints(0);
@@ -75,7 +78,7 @@ public class Play {
         }
     }
 
-    public void fight() {
+    public final void fight() {
         //pentru fiecare jucator
         for (HeroOnMap player1 : playersMap) {
             //viu
@@ -87,12 +90,11 @@ public class Play {
                     || player1.getColumn() >= gameInput.getM() || player1.getColumn() < 0) {
                 continue;
             }
-            String pos = "" + gameInput.getMap().
-                    get(player1.getLine()).charAt(player1.getColumn());
+            String pos = "" + map.position(player1.getLine(), player1.getColumn());
             //verific daca ceilalti jucatori vii si pozitionati dupa el
             //ca sa nu se bata doi de doua ori
             for (HeroOnMap player2 : playersMap) {
-                if (player1.getHero().getId() <= player2.getHero().getId()
+                if (player1.getHero().getId() >= player2.getHero().getId()
                         || player2.getHero().getHitPoints() <= 0) {
                     continue;
                 }
@@ -115,9 +117,8 @@ public class Play {
 
                     //daca vreunul din ei a murit i se dau punctele de experienta
                     //celuilalt, respectiv nivelul, dupa caz
-                    this.deadPlayer(player1, player2, level2);
                     this.deadPlayer(player2, player1, level1);
-
+                    this.deadPlayer(player1, player2, level2);
                     break;
                 }
             }
@@ -125,8 +126,8 @@ public class Play {
     }
 
     public final void angelsActions(final int i) {
-        for (Angels angel : gameInput.getAngels()){
-            if (angel.getRound() != i){
+        for (Angels angel : gameInput.getAngels()) {
+            if (angel.getRound() != i) {
                 continue;
             } else {
                 //doar daca ingerul actioneaza in runda curenta
@@ -136,15 +137,15 @@ public class Play {
                 for (HeroOnMap player : playersMap) {
                     //verific pentru fiecare jucator daca se afla in aceeasi
                     //pozitie cu ingerul
-                    if (angel.getLine() != player.getLine() ||
-                            angel.getColumn() != player.getColumn()) {
+                    if (angel.getLine() != player.getLine()
+                            || angel.getColumn() != player.getColumn()) {
                         continue;
                     }
                     //daca este mort si ingerul nu il poate invia sar peste
-                    if ((player.getHero().getHitPoints() <= 0 &&
-                            !angel.getType().equals("Spawner"))
-                            || (player.getHero().getHitPoints() > 0 &&
-                            angel.getType().equals("Spawner"))) {
+                    if ((player.getHero().getHitPoints() <= 0
+                            && !angel.getType().equals("Spawner"))
+                            || (player.getHero().getHitPoints() > 0
+                            && angel.getType().equals("Spawner"))) {
                         continue;
                     }
                     int level = player.getHero().getLevel();
@@ -155,7 +156,7 @@ public class Play {
                             + " " + player.getHero().getId();
                     greatWizard.setValue(output);
                     //mesajul de adus la viata/omorat/avansat in nivel
-                    if (angel.getType().equals("Spawner")){
+                    if (angel.getType().equals("Spawner")) {
                         this.message(player, "  was brought to life by an angel");
                     }
                     this.nextLevel(level, player);
@@ -168,7 +169,7 @@ public class Play {
         greatWizard.setValue("");
     }
 
-    public final void finalResult(){
+    public final void finalResult() {
         //pentru fiecare jucator creez out-ul
         output = "~~ Results ~~" + "\n";
         for (HeroOnMap player : playersMap) {

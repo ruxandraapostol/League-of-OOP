@@ -49,9 +49,15 @@ public class Wizard extends Heroes {
         public static final int FOUR = 4;
     }
 
+    /**
+     * Aceasta metoda va alege in functie de nivelul de hp al
+     * jucatorului in cauza daca este cazul sa aplice sau nu
+     * o strategie ofensiva/defensiva, tinand cont de enuntul
+     * problemei.
+     */
     @Override
     public void chooseStrategy() {
-        if(this.getParalyzed() == 0){
+        if (this.getParalyzed() == 0) {
             AplyStrategy aplyStrategy;
             if (this.getHitPoints() >  this.getMaxLevelHP()
                     / Modifiers.FOUR && this.getHitPoints()
@@ -125,6 +131,9 @@ public class Wizard extends Heroes {
         }
         //scad damage din viata victime
         h.setHitPoints(h.getHitPoints() - result - (int) result2);
+        //System.out.println("Wizard " + this.getId() + " drain = " + result +
+        //        "; deflect = " + (result2) + " (angel : " + this.getAngelsModifyer()
+        //        +" strategy : " + this.getStrategy() + ")");
     }
 
     //In functie de instanta obiectul cu care interactionaza

@@ -39,12 +39,19 @@ public class Pyromancer extends Heroes {
         public static final int  THREE = 3;
         public static final int FOUR = 4;
     }
+
+    /**
+     * Aceasta metoda va alege in functie de nivelul de hp al
+     * jucatorului in cauza daca este cazul sa aplice sau nu
+     * o strategie ofensiva/defensiva, tinand cont de enuntul
+     * problemei.
+     */
     @Override
     public void chooseStrategy() {
         if (this.getParalyzed() == 0) {
             AplyStrategy aplyStrategy;
-            if (this.getHitPoints() < this.getMaxLevelHP() / Modifiers.THREE &&
-                    this.getHitPoints() > this.getMaxLevelHP() / Modifiers.FOUR) {
+            if (this.getHitPoints() < this.getMaxLevelHP() / Modifiers.THREE
+                    && this.getHitPoints() > this.getMaxLevelHP() / Modifiers.FOUR) {
                 aplyStrategy = new AplyStrategy(new OffenciveStrategy());
                 aplyStrategy.executeStrategy(this,
                         Modifiers.FOUR, Modifiers.GOODSTRATEGY);
@@ -82,7 +89,7 @@ public class Pyromancer extends Heroes {
      *                 fireblast, cat si pentru ignite
      * @param s suprafata de teren
      */
-    public final void newScore(final Heroes h, float ability, final String s) {
+    public final void newScore(final Heroes h, final float ability, final String s) {
         //verific daca am modificator de teren
         float mod = 1;
         if (s.equals("V")) {
@@ -98,13 +105,16 @@ public class Pyromancer extends Heroes {
         //calculez hp ul ce trebuie scazut victimei
         //System.out.println("damage este : " + );
         int result = Math.round(Math.round((Modifiers.DAMAGE1 + Modifiers.DAMAGE1BONUS
-                * this.getLevel()) * mod ) * (ability +  this.getStrategy()
+                * this.getLevel()) * mod) * (ability +  this.getStrategy()
                 - Constants.APROX + this.getAngelsModifyer()));
-
+        int a = result;
         result += Math.round(Math.round((Modifiers.DAMAGE2 + Modifiers.DAMAGE2BONUS
                 * this.getLevel()) * mod) * (ability + this.getStrategy()
-                - Constants.APROX + this.getAngelsModifyer()));
+                + Constants.APROX + this.getAngelsModifyer()));
         h.setHitPoints(h.getHitPoints() - result);
+        //System.out.println("Pyro "+ this.getId() + " fireblast = " + a + "; ignite = "
+         //       + (result - a) + " (angel : " + this.getAngelsModifyer()
+        //       +" strategy : " + this.getStrategy() + ")");
     }
 
     //In functie de instanta obiectul cu care interactionaza

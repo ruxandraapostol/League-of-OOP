@@ -15,7 +15,7 @@ public class Knight extends Heroes {
         h.fight(this, s);
     }
 
-    public final void acceptAngel (final Angels angels)  {
+    public final void acceptAngel(final Angels angels)  {
         angels.angelPlay(this);
     }
 
@@ -48,13 +48,19 @@ public class Knight extends Heroes {
         public static final int  THREE = 3;
     }
 
+    /**
+     * Aceasta metoda va alege in functie de nivelul de hp al
+     * jucatorului in cauza daca este cazul sa aplice sau nu
+     * o strategie ofensiva/defensiva, tinand cont de enuntul
+     * problemei.
+     */
     @Override
     public void chooseStrategy() {
         AplyStrategy aplyStrategy;
-        if(this.getParalyzed() == 0) {
+        if (this.getParalyzed() == 0) {
             if (this.getHitPoints() > this.getMaxLevelHP()
-                    / Modifiers.THREE && this.getHitPoints() <
-                    this.getMaxLevelHP() / Modifiers.TWO) {
+                    / Modifiers.THREE && this.getHitPoints()
+                    < this.getMaxLevelHP() / Modifiers.TWO) {
                 aplyStrategy = new AplyStrategy(new OffenciveStrategy());
                 aplyStrategy.executeStrategy(this,
                         Modifiers.GOODHP, Modifiers.GOODSTRATEGY);
@@ -97,8 +103,8 @@ public class Knight extends Heroes {
      *              abilitatea slam
      * @param s suprafata de teren
      */
-    public final void newScore(final Heroes h, float execute,
-                                float slam, final String s) {
+    public final void newScore(final Heroes h, final float execute,
+                                final float slam, final String s) {
         //calculez limita minima de hp
         float conditon = (Modifiers.HPPROCENT + Modifiers.BONUSPROCENT
                 * this.getLevel()) * (HeroesFactory.getInstance().getHeroesByLetter(
@@ -111,11 +117,11 @@ public class Knight extends Heroes {
             //modificator de teren
             float mod = 1;
             if (s.equals("L")) {
-                mod = Modifiers.LAND ;
+                mod = Modifiers.LAND;
             }
             //calculez hp ul ce trebuie scazut victimei
             int result;
-            if(execute != 1) {
+            if (execute != 1) {
                 result = Math.round((Modifiers.DAMAGE1 + Modifiers.DAMAGE1BONUS
                         * this.getLevel()) * (execute + this.getStrategy()
                         + Constants.APROX + this.getAngelsModifyer()) * mod);
@@ -124,11 +130,15 @@ public class Knight extends Heroes {
                         * this.getLevel()) * (execute + this.getStrategy()) * mod);
 
             }
+            int a = result;
             result += Math.round((Modifiers.DAMAGE2 + Modifiers.DAMAGE2BONUS
                     * this.getLevel()) * (slam + this.getAngelsModifyer()
                     + Constants.APROX + this.getStrategy()) * mod);
             h.setHitPoints(h.getHitPoints() - result);
             h.setParalyzed(Modifiers.TWO);
+            //System.out.println("Knight " + this.getId() + " execute = " + a +
+            //        "; slam = " + (result-a) + " (angel : " + this.getAngelsModifyer()
+            //        +" strategy : " + this.getStrategy() + ")");
         }
     }
 

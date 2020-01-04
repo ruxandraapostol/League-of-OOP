@@ -43,7 +43,12 @@ public class Heroes {
     public void fight(final Wizard h, final String s) { }
     public void fight(final Heroes h, final String s) { }
 
-    public void acceptAngel (final Angels angels) {
+    /**
+     * Aceasta metoda permite unui inger sa interactioneze cu un
+     * jucator. Metoda apare in fiecare clasa derivata.
+     * @param angels - ingerul cu care va interactiona
+     */
+    public void acceptAngel(final Angels angels) {
         angels.angelPlay(this);
     }
 
@@ -105,7 +110,9 @@ public class Heroes {
         return this.letter;
     }
 
-    public final float getStrategy() { return  this.strategy; }
+    public final float getStrategy() {
+        return  this.strategy;
+    }
 
     public final int getMaxLevelHP() {
         return this.getLevel() * HeroesFactory.getInstance().
@@ -114,7 +121,9 @@ public class Heroes {
                 this.getLetter()).getHitPoints();
     }
 
-    public final void setStrategy(final float strategy) { this.strategy = strategy; }
+    public final void setStrategy(final float strategy) {
+        this.strategy = strategy;
+    }
 
     public final void setId(final int id) {
         this.id = id;
@@ -134,7 +143,7 @@ public class Heroes {
 
     // setez punctele de experienta dupa formula
     public final void setExperiencePoints(final int loserLevel) {
-        if (this.hitPoints <= 0 ){
+        if (this.hitPoints <= 0) {
             return;
         }
         int x = Constants.TWOHUNDRED - (level - loserLevel) * Constants.FORTY;
@@ -149,7 +158,7 @@ public class Heroes {
         }
     }
 
-    public final void setXPByAngel (final int xpByAngel) {
+    public final void setXPByAngel(final int xpByAngel) {
         this.experiencePoints = xpByAngel;
         if (this.experiencePoints >= Constants.TWOHUNDREDFIFTY
                 + Constants.FIFTY * this.level && this.hitPoints > 0) {
@@ -169,12 +178,12 @@ public class Heroes {
         int maxLevelHp = this.getLevel() * HeroesFactory.getInstance().
                 getHeroesByLetter(this.getLetter()).getBonusHitPoints()
                 + HeroesFactory.getInstance().getHeroesByLetter(this.getLetter()).getHitPoints();
-        if (hitPoints <= maxLevelHp){
+        if (hitPoints <= maxLevelHp) {
             this.hitPoints = hitPoints;
         } else {
             this.hitPoints = maxLevelHp;
         }
     }
 
-    public void chooseStrategy() {}
+    public void chooseStrategy() { }
 }

@@ -16,7 +16,7 @@ public class Rogue extends Heroes {
         h.fight(this, s);
     }
 
-    public final void acceptAngel (final Angels angels)  {
+    public final void acceptAngel(final Angels angels) {
         angels.angelPlay(this);
     }
 
@@ -84,8 +84,15 @@ public class Rogue extends Heroes {
         return (int) Math.round((Modifiers.DAMAGE1 + Modifiers.DAMAGE1BONUS
                 * this.getLevel()) * mod * criticalHit);
     }
+
+    /**
+     * Aceasta metoda va alege in functie de nivelul de hp al
+     * jucatorului in cauza daca este cazul sa aplice sau nu
+     * o strategie ofensiva/defensiva, tinand cont de enuntul
+     * problemei.
+     */
     @Override
-    public void chooseStrategy(){
+    public void chooseStrategy() {
         if (this.getParalyzed() == 0) {
             AplyStrategy aplyStrategy;
             if (this.getHitPoints() > this.getMaxLevelHP()
@@ -126,14 +133,16 @@ public class Rogue extends Heroes {
         if (s.equals("W")) {
             mod = Modifiers.LAND;
             h.setDot1(Math.round((Modifiers.DOT + Modifiers.BONUS * this.getLevel())
-                    * mod * (paralysis  + this.getAngelsModifyer() + this.getStrategy())), 2 * Modifiers.INDEX);
+                    * mod * (paralysis  + this.getAngelsModifyer()
+                    + this.getStrategy())), 2 * Modifiers.INDEX);
             if (nr == Modifiers.INDEX) {
                 criticalHit = Modifiers.CRITICAL;
                 nr = 0;
             }
         } else {
             h.setDot1(Math.round((Modifiers.DOT + Modifiers.BONUS * this.getLevel())
-                    * mod * (paralysis  + this.getAngelsModifyer() + this.getStrategy())), Modifiers.INDEX);
+                    * mod * (paralysis  + this.getAngelsModifyer()
+                    + this.getStrategy())), Modifiers.INDEX);
             if (nr == Modifiers.INDEX) {
                 nr = 0;
             }
@@ -146,12 +155,14 @@ public class Rogue extends Heroes {
                 * this.getLevel()) * (paralysis - Constants.APROX + this.getStrategy()
                 + this.getAngelsModifyer()) * mod);
         h.setHitPoints(h.getHitPoints() - result1 - result2);
-        if(mod != 1){
+        if (mod != 1) {
             h.setParalyzed(Modifiers.INDEX + 1);
         } else {
             h.setParalyzed(Modifiers.SEVEN);
         }
-
+        //System.out.println("Rogue " + this.getId() + " backstab = " + result1 +
+        //        "; paralysis = " + (result2) + " (angel : " + this.getAngelsModifyer()
+        //        +" strategy : " + this.getStrategy() + ")");
     }
 
     //In functie de instanta obiectul cu care interactionaza

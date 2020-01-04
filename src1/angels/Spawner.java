@@ -19,6 +19,7 @@ public class Spawner extends Angels {
         public static final int HPSPAWNERW = 120;
     }
 
+    //invie mortii
     public final void angelPower(final Heroes hero, final int newHP) {
         if (hero.getHitPoints() <= 0) {
             hero.setHitPoints(newHP);

@@ -22,6 +22,7 @@ public class LevelUpAngel extends Angels {
         public static final float DAMAGELEVELUPW = 0.25f;
     }
 
+    //creste modificatorii si xp-ul
     public final void angelPower(final Heroes hero, final float angelDamage) {
         if (hero.getHitPoints() <= 0) {
             return;

@@ -19,6 +19,7 @@ public class XPAngel extends Angels {
         public static final int XPW = 60;
     }
 
+    //creste xp-ul
     public final void angelPower(final Heroes hero, final int newXP) {
         if (hero.getHitPoints() <= 0) {
             return;

@@ -6,12 +6,12 @@ import players.Wizard;
 import players.Pyromancer;
 
 public class TheDoomer extends Angels {
-
     public TheDoomer(final String type, final String predicate, final int round,
                      final int line, final int column) {
         super(type, predicate, round, line, column);
     }
 
+    //omoara pe toata lumea
     public final void angelPlay(final Knight knight) {
         knight.setHitPoints(0);
     }
