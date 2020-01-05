@@ -2,7 +2,7 @@ package players;
 
 import angels.Angels;
 
-public class Heroes {
+public abstract class Heroes {
     private int id = 0; //pentru a nu se batea un jucator cu el insusi
     private String letter;  //sa imi fie mai usor sa identific tipul jucatorului
     private int hitPoints;

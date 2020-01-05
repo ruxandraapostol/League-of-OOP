@@ -155,7 +155,7 @@ public class Rogue extends Heroes {
                 * this.getLevel()) * (paralysis - Constants.APROX + this.getStrategy()
                 + this.getAngelsModifyer()) * mod);
         h.setHitPoints(h.getHitPoints() - result1 - result2);
-        if (mod != 1) {
+        if (mod == 1) {
             h.setParalyzed(Modifiers.INDEX + 1);
         } else {
             h.setParalyzed(Modifiers.SEVEN);

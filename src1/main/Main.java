@@ -16,7 +16,6 @@ public final class Main {
             play.fight();
             play.angelsActions(i);
         }
-
         play.finalResult();
     }
 }
